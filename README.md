@@ -43,6 +43,7 @@ Note: Never commit the `.env` file or share sensitive credentials.
 ### 4. Start the Server
 ```bash
 # Development mode
+
 pnpm run dev
 
 # Production mode
@@ -63,6 +64,7 @@ Visit `http://localhost:4000/health` to verify the server is running and connect
 ### Running Tests
 ```bash
 # Run all tests
+
 pnpm test
 
 # Run tests in watch mode (re-run on file changes)
@@ -95,6 +97,7 @@ pnpm run test:watch
 - Verify Node.js version is compatible (v14+)
 
 ## Available Scripts
+
 - `pnpm run dev`: Start development server with nodemon
 - `pnpm start`: Start production server
 - `pnpm test`: Run integration tests
