@@ -4,8 +4,9 @@ Backend API for Combat Tix, a ticketing platform for combat sports events.
 
 ## Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v14 or higher) - v22.13.0
 - npm
+- pnpm (install with corepack) -v9.15.4
 
 ## Getting Started
 
@@ -17,7 +18,7 @@ cd combat-tix-backend
 
 ### 2. Install Dependencies
 ```bash
-npm install
+pnpm install
 ```
 
 ### 3. Environment Setup
@@ -42,10 +43,10 @@ Note: Never commit the `.env` file or share sensitive credentials.
 ### 4. Start the Server
 ```bash
 # Development mode
-npm run dev
+pnpm run dev
 
 # Production mode
-npm start
+pnpm start
 ```
 
 ### 5. Verify Setup
@@ -62,10 +63,10 @@ Visit `http://localhost:4000/health` to verify the server is running and connect
 ### Running Tests
 ```bash
 # Run all tests
-npm test
+pnpm test
 
 # Run tests in watch mode (re-run on file changes)
-npm run test:watch
+pnpm run test:watch
 ```
 
 ### Test Configuration
@@ -94,8 +95,18 @@ npm run test:watch
 - Verify Node.js version is compatible (v14+)
 
 ## Available Scripts
-- `npm run dev`: Start development server with nodemon
-- `npm start`: Start production server
-- `npm test`: Run integration tests
-- `npm run lint`: Run Biome linter
-- `npm run format`: Format code with Biome
+- `pnpm run dev`: Start development server with nodemon
+- `pnpm start`: Start production server
+- `pnpm test`: Run integration tests
+- `pnpm run lint`: Run Biome linter
+- `pnpm run format`: Format code with Biome
+
+## Managing Different Node Versions with NVM
+
+- Download and install nvm from [https://github.com/coreybutler/nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases)
+
+- Install node version using `nvm install 22.13.0`
+
+- View all node versions installed with nvm `nvm list`
+
+- Switch node versions using `nvm use 22.13.0`
