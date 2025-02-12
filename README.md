@@ -62,6 +62,7 @@ Visit `http://localhost:4000/health` to verify the server is running and connect
 ## Testing
 
 ### Running Tests
+
 ```bash
 # Run all tests
 
@@ -72,26 +73,31 @@ pnpm run test:watch
 ```
 
 ### Test Configuration
+
 - Test runner: Jest
 - Environment: Node.js
 - Module system: ES Modules
 
 ### Writing Tests
+
 - Place test files in the `src/__tests__` directory
 - Use `.test.js` or `.spec.js` extension
 - Import testing libraries:
+
   ```javascript
   import request from 'supertest';
   import app from '../path/to/app';
   ```
 
 ### Best Practices
+
 - Write unit tests for individual functions
 - Create integration tests for API endpoints
 - Use `supertest` for HTTP assertion testing
 - Ensure all tests are independent and reset state between runs
 
 ### Troubleshooting
+
 - Ensure all import statements use `.js` extensions
 - Use `NODE_OPTIONS=--experimental-vm-modules npx jest` for detailed error information
 - Verify Node.js version is compatible (v14+)
@@ -113,3 +119,9 @@ pnpm run test:watch
 - View all node versions installed with nvm `nvm list`
 
 - Switch node versions using `nvm use 22.13.0`
+
+## Installing PNPM with Corepack
+
+- Enable corepack in the project `corepack enable`
+
+- Install `PNPM` version 9.15.4 corepack prepare `pnpm@9.15.4 --activate`
