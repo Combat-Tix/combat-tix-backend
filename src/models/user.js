@@ -1,9 +1,10 @@
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs"; //TODO--------> switch to bcrypt module soon
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs"); //TODO--------> switch to bcrypt module soon
 const UserSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
+      required: [true, "Please provide fullname"],
       validate: {
         validator: (value) => value && value.trim().split(" ").length >= 2,
         message: "Please provide Last name and First name",
@@ -79,16 +80,16 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
+UserSchema.pre("save", async function (next) {
   if (this.business && this.business.verificationNumber && this.isModified("business.verificationNumber")) {
     this.business.isVerified = false; //assign a default value of false to the business verified field if verification number is supplied
   }
   if (this.password && this.isModified("password")) {
-    const salt = await genSalt(10);
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(this.password, salt);
     this.password = hashedPassword;
   }
   next();
 });
 
-export default mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

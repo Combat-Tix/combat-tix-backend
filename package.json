@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "This is the backend repository for the Combattix application.",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node src/app.js",
