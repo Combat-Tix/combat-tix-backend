@@ -7,9 +7,21 @@
 //   };
 // });
 const User = require("../../models/user");
+const mongoose = require("mongoose");
 
 describe("User Model Tests", () => {
-  it("Should throw an Error if following fields are not supplied", async () => {
+  //TODO -----------> LEARN HOW TO HASH PASSWORD and compare password
+  //TODO it.only("Should a user be able to create an account", async () => {
+  //   const user = new User({
+  //     fullName: "Omosuyi Olawole",
+  //     email: "test@gmail.com",
+  //     password: "Test1234##",
+  //     phoneNumber: 90,
+  //   });
+  //   await user.save();
+  //   console.log(user);
+  // });
+  it("Should the following fields (password,email,phoneNumber,fullName) be required", async () => {
     const user = new User({});
     const validationErrors = user.validateSync();
 
@@ -152,6 +164,56 @@ describe("User Model Tests", () => {
       });
       const validationErrors = user.validateSync();
       expect(validationErrors).not.toBeDefined();
+    });
+  });
+  describe("Business", () => {
+    it("Should the user verification number be required if business name is provided", () => {
+      const user = new User({
+        fullName: "Omosuyi Olawole",
+        email: "test@gmail.com",
+        password: "Test1234##",
+        phoneNumber: 90,
+        business: {
+          name: "My Test Business",
+          verificationNumber: "",
+        },
+      });
+      const validationErrors = user.validateSync();
+      expect(validationErrors.errors["business.verificationNumber"]).toBeDefined();
+      expect(validationErrors.errors["business.verificationNumber"].message).toBe(
+        "Business registration number is required"
+      );
+    });
+    it("Should the user verification number be optional if business name is not provided", () => {
+      const user = new User({
+        fullName: "Omosuyi Olawole",
+        email: "test@gmail.com",
+        password: "Test1234##",
+        phoneNumber: 90,
+        business: {
+          verificationNumber: "",
+        },
+      });
+      const validationErrors = user.validateSync();
+      expect(validationErrors).not.toBeDefined();
+    });
+    it("Should the business verification status (isVerified) field be a valid field in the schema", () => {
+      const user = new User({ business: { isVerified: false } });
+      expect(user.business.isVerified).toBeDefined();
+    });
+    it("Should the business address field be a valid field in the schema", () => {
+      const user = new User({ business: { address: "internet" } });
+      expect(user.business.address).toBeDefined();
+    });
+  });
+  describe("Fields Validity", () => {
+    it("Should the website field be a valid field in the schema", () => {
+      const user = new User({ website: "www.test.com" });
+      expect(user.website).toBeDefined();
+    });
+    it("Should the gymAffiliation field be a valid field in the schema", () => {
+      const user = new User({ gymAffiliation: "De latinos gym" });
+      expect(user.gymAffiliation).toBeDefined();
     });
   });
 
