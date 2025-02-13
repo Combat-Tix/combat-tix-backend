@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcryptjs"); //TODO--------> switch to bcrypt module soon
 const userSchema = new mongoose.Schema(
   {
     fullName: {
@@ -70,9 +70,15 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.pre("save", function (next) {
-  if (this.business.verificationNumber) {
-    this.business.isVerified = false; //assign a default value of false to the business verified field if verification number is supplied
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.business && user.business.verificationNumber && user.isModified("business.verificationNumber")) {
+    user.business.isVerified = false; //assign a default value of false to the business verified field if verification number is supplied
+  }
+  if (user.password && user.isModified("password")) {
+    const salt = await genSalt(10);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    this.password = hashedPassword;
   }
   next();
 });
