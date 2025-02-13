@@ -108,7 +108,6 @@ describe("User Model Tests", () => {
       );
     });
   });
-
   describe("Role", () => {
     it("Should the user Role have a default value of fan when user creates an account", async () => {
       const user = new User({});
