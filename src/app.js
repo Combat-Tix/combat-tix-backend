@@ -1,12 +1,12 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import dotenv from 'dotenv';
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { typeDefs, resolvers } from './graphql/schemas/index.js';
-import { authMiddleware } from './middleware/auth.js';
-import connectDB from './config/database.js';
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import dotenv from "dotenv";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { typeDefs, resolvers } from "./graphql/schemas/index.js";
+import { authMiddleware } from "./middleware/auth.js";
+import connectDB from "./config/database.js";
 
 dotenv.config();
 
@@ -48,14 +48,14 @@ const startServer = async () => {
 
   // Apply Apollo middleware
   app.use(
-    '/graphql',
+    "/graphql",
     cors(),
     expressMiddleware(server, {
       context: authMiddleware,
     })
   );
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV !== "test") {
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
@@ -72,9 +72,9 @@ const stopServer = async () => {
 };
 
 // Start server if not in test environment
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== "test") {
   startServer().catch((error) => {
-    console.error('Failed to start server:', error);
+    console.error("Failed to start server:", error);
     process.exit(1);
   });
 }
