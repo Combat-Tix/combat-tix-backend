@@ -2,11 +2,19 @@ const mongoose = require("mongoose");
 
 const TicketSchema = new mongoose.Schema(
   {
-    eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event" },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    eventId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
+      required: [true, "Please provide Event Id"],
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Please provide User Id"],
+    },
     qrCodeImageUrl: {
       type: String,
-      required: ["Please provide url for the QrCode image"],
+      required: [true, "Please provide url for the QrCode image"],
     },
     payment: {
       amount: { type: Number, required: [true, "Please provide amount paid"] },

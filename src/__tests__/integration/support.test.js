@@ -1,13 +1,12 @@
 const Support = require("../../models/support");
 
 describe("Support Model Tests", () => {
-  //TODO it("Should create a new support when all details are entered")
   it("Should the name field be required", () => {
     const support = new Support({});
     const validationErrors = support.validateSync();
     expect(validationErrors.errors["name"]).toBeDefined();
   });
-  describe("Email", () => {
+  describe("Email Field", () => {
     it("Should throw an error when email is missing", () => {
       const support = new Support({});
       const validationErrors = support.validateSync();
@@ -32,5 +31,3 @@ describe("Support Model Tests", () => {
     expect(validationErrors.errors["message"].message).toBe("Please provide support message");
   });
 });
-
-// module.exports = mongoose.model("Support", SupportSchema);
