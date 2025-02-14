@@ -3,6 +3,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { typeDefs, resolvers } from './graphql/schemas/index.js';
 
 dotenv.config();
 
@@ -13,31 +16,38 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Successfully connected to MongoDB.'))
     .catch((error) => console.error('MongoDB connection error:', error));
 
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    introspection: true,
+});
+
 // Middleware
-app.use(helmet());
+app.use(helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: false,
+}));
 app.use(cors());
 app.use(express.json());
 
-// Basic route for testing
-app.get('/health', (req, res) => {
-    res.set({
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Surrogate-Control': 'no-store'
-    });
-    res.status(200).json({
-        status: 'ok',
-        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
-    });
-});
+await server.start();
 
-export default app;
+// Apply Apollo middleware with CORS options
+app.use('/graphql',
+    cors(),
+    expressMiddleware(server, {
+        context: async ({ req }) => ({ token: req.headers.token }),
+    })
+);
 
-// Only start the server if not in test environment
+const PORT = process.env.PORT || 4000;
+
+// Only start the server if we're not in a test environment
 if (process.env.NODE_ENV !== 'test') {
-    const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
+        console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
     });
 }
+
+export default app;

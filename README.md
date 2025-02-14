@@ -51,13 +51,35 @@ pnpm start
 ```
 
 ### 5. Verify Setup
-Visit `http://localhost:4000/health` to verify the server is running and connected to the database. You should see:
-```json
-{
-  "status": "ok",
-  "database": "connected"
-}
-```
+Visit http://localhost:4000/graphql to access the Apollo Sandbox interface. Test the setup with this query:
+ `query {
+   healthCheck {
+     status
+     database
+   }
+}`
+
+Expected response:
+`{
+   "data": {
+     "healthCheck": {
+       "status": "ok",
+       "database": "connected"
+     }
+  }
+}`
+
+## Project Structure
+src/
+__tests__/          # Test files
+config/             # Configuration files
+models/             # MongoDB models
+utils/             # Helper functions
+graphql/           # GraphQL files
+schemas/         # Schema definitions
+resolvers/       # Query/Mutation resolvers
+types/          # Type definitions
+app.js            # Main application file
 
 ## Testing
 
@@ -92,7 +114,7 @@ pnpm run test:watch
 ### Best Practices
 
 - Write unit tests for individual functions
-- Create integration tests for API endpoints
+- Create integration tests for Graphql queries and mutations
 - Use `supertest` for HTTP assertion testing
 - Ensure all tests are independent and reset state between runs
 

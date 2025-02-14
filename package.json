@@ -16,9 +16,12 @@
   "author": "Combattix",
   "license": "ISC",
   "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "@graphql-tools/schema": "^10.0.18",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "graphql": "^16.10.0",
     "helmet": "^8.0.0",
     "mongoose": "^8.10.0",
     "winston": "^3.17.0"
@@ -34,4 +37,3 @@
   },
   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }
-
