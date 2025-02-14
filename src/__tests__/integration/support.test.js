@@ -1,23 +1,36 @@
-const Ticket = require("../../models/ticket");
+const Support = require("../../models/support");
 
-describe("Ticket Model Tests", () => {
-  it("Should the following fields be required (name,email,message)", () => {
-    const ticket = new Ticket({ name: "Omosuyi Olawole", email: "test@gmail.com", message: "I am a boy" });
+describe("Support Model Tests", () => {
+  //TODO it("Should create a new support when all details are entered")
+  it("Should the name field be required", () => {
+    const support = new Support({});
+    const validationErrors = support.validateSync();
+    expect(validationErrors.errors["name"]).toBeDefined();
+  });
+  describe("Email", () => {
+    it("Should throw an error when email is missing", () => {
+      const support = new Support({});
+      const validationErrors = support.validateSync();
+      expect(validationErrors.errors["email"]).toBeDefined();
+      expect(validationErrors.errors["email"].message).toBe("Please provide an email address");
+    });
+    it("Should throw an error if email is invalid", () => {
+      const support = new Support({
+        name: "Omosuyi Olawole",
+        email: "gmail.com",
+        message: "Please give me access",
+      });
+      const validationErrors = support.validateSync();
+      expect(validationErrors.errors["email"]).toBeDefined();
+      expect(validationErrors.errors["email"].message).toBe("Please provide a valid email address");
+    });
+  });
+  it("Should throw an error when message field is missing", () => {
+    const support = new Support({});
+    const validationErrors = support.validateSync();
+    expect(validationErrors.errors["message"]).toBeDefined();
+    expect(validationErrors.errors["message"].message).toBe("Please provide support message");
   });
 });
 
-const mongoose = require("mongoose");
-
-const SupportSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: [true, "Please provide user name"] },
-    email: { type: String, required: [true, "Please provide user name"] },
-    message: {
-      type: String,
-      required: [true, "Please provide support message"],
-    },
-  },
-  { timestamps: true }
-);
-
-module.exports = mongoose.model("Support", SupportSchema);
+// module.exports = mongoose.model("Support", SupportSchema);
