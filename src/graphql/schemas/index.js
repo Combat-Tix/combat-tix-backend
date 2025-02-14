@@ -1,5 +1,5 @@
-import { typeDefs as healthTypeDefs } from '../types/health.js';
-import { resolvers as healthResolvers } from '../resolvers/health.js';
+const { typeDefs: healthTypeDefs } = require("../types/health.js");
+const { resolvers: healthResolvers } = require("../resolvers/health.js");
 
 export const typeDefs = [healthTypeDefs];
 export const resolvers = [healthResolvers];

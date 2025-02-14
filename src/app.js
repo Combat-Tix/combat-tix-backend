@@ -11,6 +11,7 @@ import connectDB from "./config/database.js";
 dotenv.config();
 
 const app = express();
+
 let server;
 
 // Initialize server

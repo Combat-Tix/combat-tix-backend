@@ -1,4 +1,4 @@
-export const typeDefs = `#graphql
+module.exports.typeDefs = `#graphql
   type HealthCheck {
     status: String!
     database: String!
