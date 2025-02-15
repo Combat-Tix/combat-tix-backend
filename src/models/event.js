@@ -7,18 +7,18 @@ const EventSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "Please provide promoter id."],
     },
-    name: { type: String, required: [true, "Please provide Event name"] },
+    name: { type: String, required: [true, "Please provide Event name."] },
     venue: {
       type: String,
-      required: [true, "Please provide venue for the event"],
+      required: [true, "Please provide venue for the event."],
     },
     capacity: {
       type: Number,
-      required: [true, "Please provide Event Capacity"],
+      required: [true, "Please provide Event capacity."],
     },
     location: {
       type: String,
-      required: [true, "Please provide location for event"],
+      required: [true, "Please provide Event location."],
     },
     eventDateTime: {
       date: {
@@ -30,9 +30,8 @@ const EventSchema = new mongoose.Schema(
         required: [true, "Please provide time for the event."],
       },
     },
-    eventTypes: {
+    eventType: {
       type: String,
-      enum: ["boxing", "MMA"],
       required: [true, "Please provide an event type."],
     },
     ticketTypes: [
@@ -52,17 +51,18 @@ const EventSchema = new mongoose.Schema(
       },
     ],
     bannerURL: {
-      type: { type: String, required: [true, "Please provide banner image."] },
+      type: String,
+      required: [true, "Please provide banner image."],
     },
     images: {
       type: Array,
     },
     videos: {
-      type: String,
+      type: Array,
     },
     splitPercentage: {
       type: Number,
-      required: [true, "Please provide split percentage"],
+      required: [true, "Please provide split percentage."],
     },
     totalAmount: {
       type: Number,
@@ -76,9 +76,11 @@ const EventSchema = new mongoose.Schema(
             teamName: { type: String },
             fighters: [
               {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-                required: [true, "Please provide fighter id"],
+                fighterId: {
+                  type: mongoose.Schema.Types.ObjectId,
+                  ref: "User",
+                  required: [true, "Please provide fighter id"],
+                },
               },
             ],
           },
