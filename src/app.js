@@ -2,21 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './graphql/schemas/index.js';
 import { authMiddleware } from './middleware/auth.js';
+import connectDB from "./config/database.js";
 
 dotenv.config();
 
 const app = express();
 
 // MongoDB Connection
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log('Successfully connected to MongoDB.'))
-  .catch((error) => console.error('MongoDB connection error:', error));
+await connectDB();
 
 const server = new ApolloServer({
   typeDefs,
