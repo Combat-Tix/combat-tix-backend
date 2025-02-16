@@ -23,11 +23,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Debug environment variables
-        run: |
-            echo "MONGODB_URI: $MONGODB_URI"
-            echo "API_KEY: $API_KEY"
-      
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
