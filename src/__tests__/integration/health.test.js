@@ -30,6 +30,7 @@ describe('Health Check', () => {
 
         const response = await request(app)
             .post('/graphql')
+            .set('x-api-key', process.env.API_KEY)
             .send({
                 query: query
             })
