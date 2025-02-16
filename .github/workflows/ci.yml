@@ -3,7 +3,7 @@ name: Backend CI
 on:
   push:
     branches:
-      - '**' # Run on every branch
+      - '**' # Run on every commit to any branch
   pull_request:
     branches:
       - main # Also run on PRs targeting main
