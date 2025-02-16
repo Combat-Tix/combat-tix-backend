@@ -3,23 +3,23 @@ import mongoose from 'mongoose';
 import app from '../../app.js';
 
 describe('Health Check', () => {
-    // Before all tests
-    beforeAll(async () => {
-        await mongoose.connect(process.env.MONGODB_URI);
-        // Wait for the connection to be ready
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    });
+  // Before all tests
+  beforeAll(async () => {
+    await mongoose.connect(process.env.MONGODB_URI);
+    // Wait for the connection to be ready
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  });
 
-    // After all tests
-    afterAll(async () => {
-        await mongoose.connection.close();
-    });
+  // After all tests
+  afterAll(async () => {
+    await mongoose.connection.close();
+  });
 
-    it('should return health check data via GraphQL', async () => {
-        // Verify database connection before test
-        expect(mongoose.connection.readyState).toBe(1);
+  it('should return health check data via GraphQL', async () => {
+    // Verify database connection before test
+    expect(mongoose.connection.readyState).toBe(1);
 
-        const query = `
+    const query = `
       query {
         healthCheck {
           status
@@ -28,17 +28,17 @@ describe('Health Check', () => {
       }
     `;
 
-        const response = await request(app)
-            .post('/graphql')
-            .set('x-api-key', process.env.API_KEY)
-            .send({
-                query: query
-            })
-            .expect(200);
+    const response = await request(app)
+      .post('/graphql')
+      .set('x-api-key', process.env.API_KEY)
+      .send({
+        query: query,
+      })
+      .expect(200);
 
-        expect(response.body.data.healthCheck).toEqual({
-            status: 'ok',
-            database: 'connected'
-        });
+    expect(response.body.data.healthCheck).toEqual({
+      status: 'ok',
+      database: 'connected',
     });
+  });
 });
