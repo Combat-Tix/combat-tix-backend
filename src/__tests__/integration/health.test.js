@@ -14,16 +14,16 @@ describe('Health Check', () => {
     `;
 
     const response = await request(app)
-      .post('/graphql')
-      .set('x-api-key', process.env.API_KEY)
+      .post("/graphql")
+      .set("x-api-key", process.env.API_KEY)
       .send({
         query: query,
       })
       .expect(200);
 
     expect(response.body.data.healthCheck).toEqual({
-      status: 'ok',
-      database: 'connected',
+      status: "ok",
+      database: "connected",
     });
   });
 });

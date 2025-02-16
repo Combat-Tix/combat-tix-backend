@@ -1,5 +1,5 @@
-const Ticket = require("../../models/ticket");
-const mongoose = require("mongoose");
+import Ticket from "../../models/ticket"
+import mongoose from "mongoose";
 
 describe("Ticket Model Test", () => {
   describe("Event ID Field", () => {

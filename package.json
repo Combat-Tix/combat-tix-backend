@@ -11,7 +11,7 @@
     "format": "biome format . --write",
     "check": "biome check --apply ."
   },
-  "type": "commonjs",
+  "type": "module",
   "keywords": [],
   "author": "Combattix",
   "license": "ISC",

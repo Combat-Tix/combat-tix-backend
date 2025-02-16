@@ -6,8 +6,8 @@
 //       .mockRejectedValueOnce({ code: 11000 }),
 //   };
 // });
-const User = require("../../models/user");
-const mongoose = require("mongoose");
+import User from "../../models/user";
+import mongoose from "mongoose";
 
 describe("User Model Tests", () => {
   //TODO -----------> LEARN HOW TO HASH PASSWORD and compare password

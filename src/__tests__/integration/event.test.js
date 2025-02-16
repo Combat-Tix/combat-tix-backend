@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Event = require("../../models/event");
+import mongoose from "mongoose";
+import Event from "../../models/event";
 
 describe("Event Model Tests", () => {
   describe("Promoter Id Field", () => {

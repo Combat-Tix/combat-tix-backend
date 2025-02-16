@@ -1,4 +1,4 @@
-const Support = require("../../models/support");
+import Support from "../../models/support";
 
 describe("Support Model Tests", () => {
   it("Should the name field be required", () => {
