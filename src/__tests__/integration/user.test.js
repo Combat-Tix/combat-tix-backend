@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 // jest.mock("../../models/user", () => {
 //   return {
 //     create: jest
@@ -7,7 +8,6 @@
 //   };
 // });
 import User from "../../models/user";
-import mongoose from "mongoose";
 
 describe("User Model Tests", () => {
   //TODO -----------> LEARN HOW TO HASH PASSWORD and compare password
@@ -25,10 +25,10 @@ describe("User Model Tests", () => {
     const user = new User({});
     const validationErrors = user.validateSync();
 
-    expect(validationErrors.errors["password"]).toBeDefined();
-    expect(validationErrors.errors["email"]).toBeDefined();
-    expect(validationErrors.errors["phoneNumber"]).toBeDefined();
-    expect(validationErrors.errors["fullName"]).toBeDefined();
+    expect(validationErrors.errors.password).toBeDefined();
+    expect(validationErrors.errors.email).toBeDefined();
+    expect(validationErrors.errors.phoneNumber).toBeDefined();
+    expect(validationErrors.errors.fullName).toBeDefined();
   });
   it("Should throw an Error if the fullname does not consist of the Last name and first name", async () => {
     const user = new User({
@@ -38,8 +38,8 @@ describe("User Model Tests", () => {
       phoneNumber: 90,
     });
     const validationErrors = user.validateSync();
-    expect(validationErrors.errors["fullName"]).toBeDefined();
-    expect(validationErrors.errors["fullName"].message).toBe("Please provide Last name and First name");
+    expect(validationErrors.errors.fullName).toBeDefined();
+    expect(validationErrors.errors.fullName.message).toBe("Please provide Last name and First name");
   });
   describe("Email", () => {
     it("Should throw an error if the email is invalid", async () => {
@@ -50,8 +50,8 @@ describe("User Model Tests", () => {
         phoneNumber: 90,
       });
       const validationErrors = user.validateSync();
-      expect(validationErrors.errors["email"]).toBeDefined();
-      expect(validationErrors.errors["email"].message).toBe("Please provide a valid email address");
+      expect(validationErrors.errors.email).toBeDefined();
+      expect(validationErrors.errors.email.message).toBe("Please provide a valid email address");
     });
     it("Should pass if the email is valid", async () => {
       const user = new User({
@@ -91,12 +91,10 @@ describe("User Model Tests", () => {
         phoneNumber: 90,
       });
       const validationErrors = user.validateSync();
-      expect(validationErrors.errors["password"]).toBeDefined();
-      expect(validationErrors.errors["password"].message).toBe("Password must be at least 8 characters long");
+      expect(validationErrors.errors.password).toBeDefined();
+      expect(validationErrors.errors.password.message).toBe("Password must be at least 8 characters long");
     });
-    it(`Should pass if password meets the security requirements which is 
-       "Password must contain at least one lowercase character, 
-       one uppercase character, and one number, symbol, or whitespace character",`, async () => {
+    it('Should pass if password meets the security requirements which is "Password must contain at least one lowercase character, one uppercase character, and one number, symbol, or whitespace character",', async () => {
       const user = new User({
         fullName: "Omosuyi Olawole",
         email: "test@gmail.com",
@@ -114,8 +112,8 @@ describe("User Model Tests", () => {
         phoneNumber: 90,
       });
       const validationErrors = user.validateSync();
-      expect(validationErrors.errors["password"]).toBeDefined();
-      expect(validationErrors.errors["password"].message).toBe(
+      expect(validationErrors.errors.password).toBeDefined();
+      expect(validationErrors.errors.password.message).toBe(
         "Password must contain at least one lowercase character, one uppercase character, and one number, symbol, or whitespace character"
       );
     });
@@ -150,8 +148,8 @@ describe("User Model Tests", () => {
         dateOfBirth: "",
       });
       const validationErrors = user.validateSync();
-      expect(validationErrors.errors["dateOfBirth"]).toBeDefined();
-      expect(validationErrors.errors["dateOfBirth"].message).toBe("Please provide date of birth");
+      expect(validationErrors.errors.dateOfBirth).toBeDefined();
+      expect(validationErrors.errors.dateOfBirth.message).toBe("Please provide date of birth");
     });
     it("Should date of birth field be optional if the user is not a fighter", async () => {
       const user = new User({
@@ -179,8 +177,8 @@ describe("User Model Tests", () => {
         },
       });
       const validationErrors = user.validateSync();
-      expect(validationErrors.errors["business.verificationNumber"]).toBeDefined();
-      expect(validationErrors.errors["business.verificationNumber"].message).toBe(
+      expect(validationErrors.errors.business.verificationNumber).toBeDefined();
+      expect(validationErrors.errors.business.verificationNumber.message).toBe(
         "Business registration number is required"
       );
     });

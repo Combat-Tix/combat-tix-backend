@@ -1,58 +1,59 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const EventSchema = new mongoose.Schema(
   {
     promoterId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Please provide promoter id."],
+      ref: 'User',
+      required: [true, 'Please provide promoter id.'],
     },
-    name: { type: String, required: [true, "Please provide Event name."] },
+    name: { type: String, required: [true, 'Please provide Event name.'] },
     venue: {
       type: String,
-      required: [true, "Please provide venue for the event."],
+      required: [true, 'Please provide venue for the event.'],
     },
     capacity: {
       type: Number,
-      required: [true, "Please provide Event capacity."],
+      required: [true, 'Please provide Event capacity.'],
     },
     location: {
       type: String,
-      required: [true, "Please provide Event location."],
+      required: [true, 'Please provide Event location.'],
     },
     eventDateTime: {
       date: {
         type: Date,
-        required: [true, "Please provide date for the event."],
+        required: [true, 'Please provide date for the event.'],
       },
       time: {
         type: String,
-        required: [true, "Please provide time for the event."],
+        required: [true, 'Please provide time for the event.'],
       },
     },
     eventType: {
       type: String,
-      required: [true, "Please provide an event type."],
+      required: [true, 'Please provide an event type.'],
     },
     ticketTypes: [
       {
         type: {
           type: String,
-          enum: ["VIP", "general", "standing", "seating"],
-          required: [true, "Please provide ticket type."],
+          enum: ['VIP', 'general', 'standing', 'seating'],
+          required: [true, 'Please provide ticket type.'],
         },
         price: {
           type: String,
           required: function () {
-            return this.type ? true : false;
+            return !!this.type;
           },
-          message: (props) => `Please provide a price for the ${props.parent.type} ticket.`,
+          message: (props) =>
+            `Please provide a price for the ${props.parent.type} ticket.`,
         },
       },
     ],
     bannerURL: {
       type: String,
-      required: [true, "Please provide banner image."],
+      required: [true, 'Please provide banner image.'],
     },
     images: {
       type: Array,
@@ -62,7 +63,7 @@ const EventSchema = new mongoose.Schema(
     },
     splitPercentage: {
       type: Number,
-      required: [true, "Please provide split percentage."],
+      required: [true, 'Please provide split percentage.'],
     },
     totalAmount: {
       type: Number,
@@ -78,8 +79,8 @@ const EventSchema = new mongoose.Schema(
               {
                 fighterId: {
                   type: mongoose.Schema.Types.ObjectId,
-                  ref: "User",
-                  required: [true, "Please provide fighter id"],
+                  ref: 'User',
+                  required: [true, 'Please provide fighter id'],
                 },
               },
             ],
@@ -91,4 +92,4 @@ const EventSchema = new mongoose.Schema(
   { timeStamps: true }
 );
 
-export default mongoose.model("Event", EventSchema);
+export default mongoose.model('Event', EventSchema);
