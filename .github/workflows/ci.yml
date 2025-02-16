@@ -3,10 +3,10 @@ name: Backend CI
 on:
   pull_request:
     branches:
-      - main    # Only run on PRs targeting main
+      - main   # Only run on PRs targeting main
   push:
     branches-ignore:
-      - main      # Run on pushes to any branch except main
+      - main    # Run on pushes to any branch except main
 
 jobs:
   test-and-lint:
