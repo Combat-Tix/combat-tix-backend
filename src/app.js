@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './graphql/schemas/index.js';
+import { authMiddleware } from "./middleware/auth.js";
 
 dotenv.config();
 
@@ -20,6 +21,20 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     introspection: true,
+    formatError: (formattedError, error) => {
+        // Extract the custom status code from the error's extensions
+        const statusCode = error?.extensions?.http?.status || 500;
+
+        return {
+            message: formattedError.message,
+            extensions: {
+                ...formattedError.extensions,
+                http: {
+                    status: statusCode
+                }
+            }
+        };
+    }
 });
 
 // Middleware
@@ -36,7 +51,7 @@ await server.start();
 app.use('/graphql',
     cors(),
     expressMiddleware(server, {
-        context: async ({ req }) => ({ token: req.headers.token }),
+        context: authMiddleware
     })
 );
 

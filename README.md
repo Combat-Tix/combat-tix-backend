@@ -32,8 +32,9 @@ cp .env.example .env
 2. Update the `.env` file with the required values:
 ```env
 PORT=4000                    # Port for the server to run on
-NODE_ENV=development        # Environment (development/production)
-MONGODB_URI=                # MongoDB connection string (get from maintainer)
+NODE_ENV=development         # Environment (development/production)
+MONGODB_URI=                 # MongoDB connection string (get from maintainer)
+API_KEY=your-secure-api-key  # API key for authenticating requests (get from maintainer)
 ```
 
 3. Contact the project maintainer to get the MongoDB connection string and any other required credentials.
@@ -51,35 +52,34 @@ pnpm start
 ```
 
 ### 5. Verify Setup
+This API uses an API key for authentication. The API key must be included in the request headers:
+```json 
+{
+"x-api-key": "your-secure-api-key"
+}
+```
+
 Visit http://localhost:4000/graphql to access the Apollo Sandbox interface. Test the setup with this query:
- `query {
+ ``` 
+ query {
    healthCheck {
      status
      database
    }
-}`
+}
+```
 
 Expected response:
-`{
+```
+{
    "data": {
      "healthCheck": {
        "status": "ok",
        "database": "connected"
      }
   }
-}`
-
-## Project Structure
-src/
-__tests__/          # Test files
-config/             # Configuration files
-models/             # MongoDB models
-utils/             # Helper functions
-graphql/           # GraphQL files
-schemas/         # Schema definitions
-resolvers/       # Query/Mutation resolvers
-types/          # Type definitions
-app.js            # Main application file
+}
+```
 
 ## Testing
 
