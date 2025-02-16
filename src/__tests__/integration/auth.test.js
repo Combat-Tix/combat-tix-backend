@@ -1,17 +1,7 @@
 import request from 'supertest';
-import mongoose from 'mongoose';
-import app from '../../app.js';
+import { app } from '../utils/setup.js';
 
 describe('API Authentication', () => {
-  beforeAll(async () => {
-    await mongoose.connect(process.env.MONGODB_URI);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  });
-
-  afterAll(async () => {
-    await mongoose.connection.close();
-  });
-
   const testQuery = `
     query {
       healthCheck {
