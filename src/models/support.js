@@ -5,7 +5,6 @@ const SupportSchema = new mongoose.Schema(
     name: { type: String, required: [true, 'Please provide user name'] },
     email: {
       type: String,
-      unique: true,
       lowercase: true,
       required: [true, 'Please provide an email address'],
       match: [
