@@ -65,7 +65,7 @@ describe("Event Model Tests", () => {
       const validationError = event.validateSync();
       expect(validationError.errors.capacity).not.toBeDefined();
     });
-    it.only("Should throw an error if the Event capacity does not equal the total capacity of the ticket types", async () => {
+    it("Should throw an error if the Event capacity does not equal the total capacity of the ticket types", async () => {
       const event = new Event({
         capacity: 10000,
         ticketTypes: [
@@ -81,7 +81,7 @@ describe("Event Model Tests", () => {
         "Event Capacity does not match the total capacity of all ticket types."
       );
     });
-    it.only("Should pass if the Event capacity equal the total capacity of the ticket types", async () => {
+    it("Should pass if the Event capacity equal the total capacity of the ticket types", async () => {
       const event = new Event({
         capacity: 10000,
         ticketTypes: [

@@ -138,7 +138,7 @@ describe("User Model Tests", () => {
   });
   describe.skip("Business", () => {
     //TODO fix issue
-    it.only("Should the user verification number be required if business name is provided", () => {
+    it("Should the user verification number be required if business name is provided", () => {
       const user = new User({
         business: {
           name: "My business",
