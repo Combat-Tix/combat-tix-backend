@@ -110,10 +110,7 @@ const userSchema = new mongoose.Schema(
     },
     website: {
       type: String,
-      match: [
-        /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\/\S*)?$/,
-        "Please enter a valid website URL",
-      ],
+      match: [/^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/, "Please enter a valid website URL"],
     },
     userIsVerified: {
       type: Boolean,

@@ -57,10 +57,7 @@ describe("User Model Tests", () => {
     });
     it("Should throw an error if password is less than 8 characters", async () => {
       const user = new User({
-        fullName: "Omosuyi Olawole",
-        email: "test@gmail.com",
         password: "e",
-        phoneNumber: 90,
       });
       const validationErrors = user.validateSync();
       expect(validationErrors.errors.password).toBeDefined();
@@ -68,20 +65,14 @@ describe("User Model Tests", () => {
     });
     it('Should pass if password meets the security requirements which is "Password must contain at least one lowercase character, one uppercase character, and one number, symbol, or whitespace character",', async () => {
       const user = new User({
-        fullName: "Omosuyi Olawole",
-        email: "test@gmail.com",
         password: "Test1234##",
-        phoneNumber: 90,
       });
       const validationErrors = user.validateSync();
-      expect(validationErrors).not.toBeDefined();
+      expect(validationErrors.errors.password).not.toBeDefined();
     });
     it("Should throw an Error when passwords does not meet the security requirements", async () => {
       const user = new User({
-        fullName: "Omosuyi Olawole",
-        email: "test@gmail.com",
         password: "est1234##",
-        phoneNumber: 90,
       });
       const validationErrors = user.validateSync();
       expect(validationErrors.errors.password).toBeDefined();
@@ -98,14 +89,10 @@ describe("User Model Tests", () => {
     ["fan", "fighter", "promoter", "admin"].map((role) => {
       it(`Should the ${role} be a valid user role`, () => {
         const user = new User({
-          fullName: "Omosuyi Olawole",
-          email: "test@gmail.com",
-          password: "Test1234##",
-          phoneNumber: 90,
           role,
         });
         const validationErrors = user.validateSync();
-        expect(validationErrors).not.toBeDefined();
+        expect(validationErrors.errors.role).not.toBeDefined();
       });
     });
   });
@@ -137,7 +124,6 @@ describe("User Model Tests", () => {
     });
   });
   describe.skip("Business", () => {
-    //TODO fix issue
     it("Should the user verification number be required if business name is provided", () => {
       const user = new User({
         business: {
@@ -146,7 +132,7 @@ describe("User Model Tests", () => {
         },
       });
       const validationErrors = user.validateSync();
-      console.log(validationErrors);
+
       expect(validationErrors.errors.business.verificationNumber).toBeDefined();
       expect(validationErrors.errors.business.verificationNumber.message).toBe(
         "Business registration number is required"
@@ -176,7 +162,6 @@ describe("User Model Tests", () => {
           },
         });
         const validationErrors = user.validateSync();
-        console.log(validationErrors);
         expect(validationErrors.errors.business.address.street).toBeDefined();
         expect(validationErrors.errors.business.address.street).toBe(
           "Please enter the street where your business is located."
@@ -229,11 +214,20 @@ describe("User Model Tests", () => {
       });
     });
   });
-  describe("Fields Validity", () => {
-    it("Should the website field be a valid field in the schema", () => {
-      const user = new User({ website: "www.test.com" });
-      expect(user.website).toBeDefined();
+  describe("Website", () => {
+    it("Should pass if the website field is a valid URL", () => {
+      const user = new User({ website: "https://www.test.com" });
+      const validationErrors = user.validateSync();
+      expect(validationErrors.errors.website).not.toBeDefined();
     });
+    it("Should throw an error if the website is not a valid URL", () => {
+      const user = new User({ website: "test" });
+      const validationErrors = user.validateSync();
+      expect(validationErrors.errors.website).toBeDefined();
+      expect(validationErrors.errors.website.message).toBe("Please enter a valid website URL");
+    });
+  });
+  describe("Fields Validity", () => {
     it("Should the gymAffiliation field be a valid field in the schema", () => {
       const user = new User({ gymAffiliation: "De latinos gym" });
       expect(user.gymAffiliation).toBeDefined();

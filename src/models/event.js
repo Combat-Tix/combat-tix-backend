@@ -103,10 +103,7 @@ const eventSchema = new mongoose.Schema(
     bannerURL: {
       type: String,
       required: [true, "Please provide Banner Image."],
-      match: [
-        /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\/\S*)?$/,
-        "Please enter a valid URL for the Banner Image",
-      ],
+      match: [/^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/, "Please enter a valid website URL"],
     },
     images: {
       type: [String],
