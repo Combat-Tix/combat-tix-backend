@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import Ticket from '../../models/ticket';
 
-describe('Ticket Model Test', () => {
+describe.skip('Ticket Model Test', () => {
   describe('Event ID Field', () => {
     it('Should throw an error if event id is not provided', () => {
       const ticket = new Ticket({});

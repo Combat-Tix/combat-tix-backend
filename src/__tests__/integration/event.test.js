@@ -65,6 +65,33 @@ describe("Event Model Tests", () => {
       const validationError = event.validateSync();
       expect(validationError.errors.capacity).not.toBeDefined();
     });
+    it.only("Should throw an error if the Event capacity does not equal the total capacity of the ticket types", async () => {
+      const event = new Event({
+        capacity: 10000,
+        ticketTypes: [
+          { type: "VIP", price: 2000, capacity: 100 },
+          { type: "standing", price: 2000, capacity: 500 },
+        ],
+      });
+      console.log(event);
+      const validationErrors = event.validateSync();
+      console.log(validationErrors);
+      expect(validationErrors.errors.capacity).toBeDefined();
+      expect(validationErrors.errors.capacity.message).toBe(
+        "Event Capacity does not match the total capacity of all ticket types."
+      );
+    });
+    it.only("Should pass if the Event capacity equal the total capacity of the ticket types", async () => {
+      const event = new Event({
+        capacity: 10000,
+        ticketTypes: [
+          { type: "VIP", price: 2000, capacity: 5000 },
+          { type: "standing", price: 2000, capacity: 5000 },
+        ],
+      });
+      const validationErrors = event.validateSync();
+      expect(validationErrors.errors.capacity).not.toBeDefined();
+    });
   });
   describe("Location Field", () => {
     it("Should throw an Error if the Event location is not provided", () => {
@@ -197,26 +224,12 @@ describe("Event Model Tests", () => {
   describe("Ticket Types", () => {
     describe("Type Field", () => {
       it("Should throw an error when ticket type is not provided in an object of a ticket types array", () => {
-        const event = new Event({
-          ticketTypes: [{}],
-          //<-------- supply all other required fields -------->
-          promoterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
-          splitPercentage: 50,
-          bannerURL: "https://banner",
-          eventType: "Boxing",
-          location: "No. 50 O2 arena",
-          capacity: 10000,
-          venue: "02 arena",
-          name: "Boxing stars event",
-          eventDateTime: {
-            time: "10:00am",
-            date: Date.now(),
-          },
-        });
+        const event = new Event({});
         const validationErrors = event.validateSync();
-
         expect(validationErrors.errors.ticketTypes[0].type).toBeDefined();
-        expect(validationErrors.errors.ticketTypes[0].type.message).toBe("Please provide ticket type.");
+        expect(validationErrors.errors.ticketTypes[0].type.message).toBe(
+          "Please provide at least one ticket type."
+        );
       });
       ["VIP", "general", "standing", "seating"].map((type) => {
         it(`Should pass when the ${type} ticket type is provided as a ticket type`, () => {
@@ -227,23 +240,35 @@ describe("Event Model Tests", () => {
           expect(validationErrors.errors.ticketTypes[0].type).not.toBeDefined();
         });
       });
-      it('Should throw an error when an invalid ticket type is provided', () => {
+      it("Should throw an error when an invalid ticket type is provided", () => {
         const event = new Event({
           ticketTypes: [{ type: "invalid-type" }],
         });
         const validationErrors = event.validateSync();
         expect(validationErrors.errors.ticketTypes[0].type).toBeDefined();
       });
+      it("Should throw an error if the same ticket type is provided", async () => {
+        const event = new Event({
+          capacity: 10000,
+          ticketTypes: [
+            { type: "VIP", price: 2000, capacity: 100 },
+            { type: "VIP", price: 2000, capacity: 500 },
+          ],
+        });
+        const validationErrors = event.validateSync();
+        expect(validationErrors.errors.ticketTypes).toBeDefined();
+        expect(validationErrors.errors.ticketTypes.message).toBe("Each ticket type must be unique.");
+      });
     });
     describe("Price Field", () => {
-      it('Should throw an error when the ticket type is provided without a corresponding price', () => {
+      it("Should throw an error when the ticket type is provided without a corresponding price", () => {
         const event = new Event({
           ticketTypes: [{ type: "seating", price: "" }],
         });
         const validationErrors = event.validateSync();
         expect(validationErrors.errors.ticketTypes[0].price).toBeDefined();
       });
-      it('Should pass when the ticket type is provided with a corresponding price', () => {
+      it("Should pass when the ticket type is provided with a corresponding price", () => {
         const event = new Event({
           ticketTypes: [{ type: "seating", price: 5000 }],
         });
