@@ -137,6 +137,7 @@ describe("User Model Tests", () => {
     });
   });
   describe.skip("Business", () => {
+    //TODO fix issue
     it.only("Should the user verification number be required if business name is provided", () => {
       const user = new User({
         business: {
@@ -145,88 +146,88 @@ describe("User Model Tests", () => {
         },
       });
       const validationErrors = user.validateSync();
-      console.log(validationErrors.errors.business);
-      expect(validationErrors.errors["business"]).toBeDefined();
+      console.log(validationErrors);
+      expect(validationErrors.errors.business.verificationNumber).toBeDefined();
       expect(validationErrors.errors.business.verificationNumber.message).toBe(
         "Business registration number is required"
       );
     });
-    // it("Should the user verification number be optional if business name is not provided", () => {
-    //   const user = new User({
-    //     business: {
-    //       verificationNumber: "",
-    //     },
-    //   });
-    //   const validationErrors = user.validateSync();
-    //   expect(validationErrors.errors.business.verificationNumber).not.toBeDefined();
-    // });
-    // it("Should the business verification status (isVerified) field be a valid field in the schema", () => {
-    //   const user = new User({ business: { isVerified: false } });
-    //   expect(user.business.isVerified).toBeDefined();
-    // });
-    // describe("Address", () => {
-    //   it("Should the business street address be required if business name is provided", () => {
-    //     const user = new User({
-    //       business: {
-    //         name: "My Test Business",
-    //         address: {
-    //           street: "",
-    //         },
-    //       },
-    //     });
-    //     const validationErrors = user.validateSync();
-    //     console.log(validationErrors);
-    //     expect(validationErrors.errors.business.address.street).toBeDefined();
-    //     expect(validationErrors.errors.business.address.street).toBe(
-    //       "Please enter the street where your business is located."
-    //     );
-    //   });
-    //   it("Should the business city name be required if business name is provided", () => {
-    //     const user = new User({
-    //       business: {
-    //         name: "My Test Business",
-    //         address: {
-    //           city: "",
-    //         },
-    //       },
-    //     });
-    //     const validationErrors = user.validateSync();
-    //     expect(validationErrors.errors.business.address.city).toBeDefined();
-    //     expect(validationErrors.errors.business.address.city).toBe(
-    //       "Please enter the city where your business is located."
-    //     );
-    //   });
-    //   it("Should the business postal code be required if business name is provided", () => {
-    //     const user = new User({
-    //       business: {
-    //         name: "My Test Business",
-    //         address: {
-    //           postalCode: "",
-    //         },
-    //       },
-    //     });
-    //     const validationErrors = user.validateSync();
-    //     expect(validationErrors.errors.business.address.street).toBeDefined();
-    //     expect(validationErrors.errors.business.address.street).toBe(
-    //       "Please enter your business's postal code."
-    //     );
-    //   });
-    //   it("Should the business country be required if business name is provided", () => {
-    //     const user = new User({
-    //       business: {
-    //         name: "My Test Business",
-    //         address: {
-    //           country: "",
-    //         },
-    //       },
-    //     });
-    //     const validationErrors = user.validateSync();
-    //     expect(validationErrors.errors.business.address.street).toBeDefined();
-    //     expect(validationErrors.errors.business.address.street).toBe(
-    //       "Please enter the country where your business is located."
-    //     );
-    //   });
-    // });
+    it("Should the user verification number be optional if business name is not provided", () => {
+      const user = new User({
+        business: {
+          verificationNumber: "",
+        },
+      });
+      const validationErrors = user.validateSync();
+      expect(validationErrors.errors.business.verificationNumber).not.toBeDefined();
+    });
+    it("Should the business verification status (isVerified) field be a valid field in the schema", () => {
+      const user = new User({ business: { isVerified: false } });
+      expect(user.business.isVerified).toBeDefined();
+    });
+    describe("Address", () => {
+      it("Should the business street address be required if business name is provided", () => {
+        const user = new User({
+          business: {
+            name: "My Test Business",
+            address: {
+              street: "",
+            },
+          },
+        });
+        const validationErrors = user.validateSync();
+        console.log(validationErrors);
+        expect(validationErrors.errors.business.address.street).toBeDefined();
+        expect(validationErrors.errors.business.address.street).toBe(
+          "Please enter the street where your business is located."
+        );
+      });
+      it("Should the business city name be required if business name is provided", () => {
+        const user = new User({
+          business: {
+            name: "My Test Business",
+            address: {
+              city: "",
+            },
+          },
+        });
+        const validationErrors = user.validateSync();
+        expect(validationErrors.errors.business.address.city).toBeDefined();
+        expect(validationErrors.errors.business.address.city).toBe(
+          "Please enter the city where your business is located."
+        );
+      });
+      it("Should the business postal code be required if business name is provided", () => {
+        const user = new User({
+          business: {
+            name: "My Test Business",
+            address: {
+              postalCode: "",
+            },
+          },
+        });
+        const validationErrors = user.validateSync();
+        expect(validationErrors.errors.business.address.street).toBeDefined();
+        expect(validationErrors.errors.business.address.street).toBe(
+          "Please enter your business's postal code."
+        );
+      });
+      it("Should the business country be required if business name is provided", () => {
+        const user = new User({
+          business: {
+            name: "My Test Business",
+            address: {
+              country: "",
+            },
+          },
+        });
+        const validationErrors = user.validateSync();
+        expect(validationErrors.errors.business.address.street).toBeDefined();
+        expect(validationErrors.errors.business.address.street).toBe(
+          "Please enter the country where your business is located."
+        );
+      });
+    });
   });
   describe("Fields Validity", () => {
     it("Should the website field be a valid field in the schema", () => {
