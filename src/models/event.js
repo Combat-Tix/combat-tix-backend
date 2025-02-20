@@ -1,3 +1,5 @@
+// biome-ignore lint/complexity/useArrowFunction: This file requires function expressions
+
 import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema(
@@ -113,7 +115,7 @@ const eventSchema = new mongoose.Schema(
     images: {
       type: [String],
       validate: {
-        validator: function (urls) {
+        validator: (urls) => {
           return urls.every((url) =>
             /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\/\S*)?$/.test(
               url
