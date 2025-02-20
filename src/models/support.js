@@ -1,25 +1,25 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const supportSchema = new mongoose.Schema(
   {
-    name: { type: String, required: [true, "Please provide user name"] },
+    name: { type: String, required: [true, 'Please provide user name'] },
     email: {
       type: String,
-      required: [true, "Please provide an email address"],
+      required: [true, 'Please provide an email address'],
       match: [
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        "Please provide a valid email address",
+        'Please provide a valid email address',
       ],
     },
     message: {
       type: String,
-      required: [true, "Please provide support message"],
+      required: [true, 'Please provide support message'],
     },
     status: {
       type: String,
-      default: "Open",
-      enum: ["Open", "In Progress", "Resolved", "Closed"],
-      required: [true, "Please provide support status."],
+      default: 'Open',
+      enum: ['Open', 'In Progress', 'Resolved', 'Closed'],
+      required: [true, 'Please provide support status.'],
     },
   },
   { timestamps: true }
@@ -28,4 +28,4 @@ const supportSchema = new mongoose.Schema(
 supportSchema.index({ email: 1 });
 supportSchema.index({ status: 1 });
 
-export default mongoose.model("Support", supportSchema);
+export default mongoose.model('Support', supportSchema);

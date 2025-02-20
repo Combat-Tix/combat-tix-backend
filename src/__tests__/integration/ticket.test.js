@@ -95,9 +95,7 @@ describe.skip('Ticket Model Test', () => {
       it('Should pass if Transaction ID provided is of String type', () => {
         const ticket = new Ticket({ payment: { transactionId: '1x00000' } });
         const validationErrors = ticket.validateSync();
-        expect(
-          validationErrors.errors.payment.transactionId
-        ).not.toBeDefined();
+        expect(validationErrors.errors.payment.transactionId).not.toBeDefined();
       });
     });
     describe('Status', () => {

@@ -1,52 +1,52 @@
-import bcrypt from "bcryptjs";
-import mongoose from "mongoose";
+import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, "Please provide first name"],
+      required: [true, 'Please provide first name'],
     },
     lastName: {
       type: String,
-      required: [true, "Please provide last name"],
+      required: [true, 'Please provide last name'],
     },
     phoneNumber: {
       type: String,
-      required: [true, "Please provide phone number"],
-      match: [/^\+?[\d\s-]+$/, "Please provide a valid phone number"],
+      required: [true, 'Please provide phone number'],
+      match: [/^\+?[\d\s-]+$/, 'Please provide a valid phone number'],
     },
     email: {
       type: String,
-      required: [true, "Please provide an email address"],
+      required: [true, 'Please provide an email address'],
       match: [
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        "Please provide a valid email address",
+        'Please provide a valid email address',
       ],
     },
     password: {
       type: String,
-      required: [true, "Please provide a password"],
-      minlength: [8, "Password must be at least 8 characters long"],
+      required: [true, 'Please provide a password'],
+      minlength: [8, 'Password must be at least 8 characters long'],
       match: [
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9\s\W]).+$/,
-        "Password must contain at least one lowercase character, one uppercase character, and one number, symbol, or whitespace character",
+        'Password must contain at least one lowercase character, one uppercase character, and one number, symbol, or whitespace character',
       ],
     },
     role: {
       type: String,
-      default: "fan",
-      enum: ["fan", "fighter", "promoter", "admin"],
-      required: [true, "Please provide a valid user role"],
+      default: 'fan',
+      enum: ['fan', 'fighter', 'promoter', 'admin'],
+      required: [true, 'Please provide a valid user role'],
     },
     dateOfBirth: {
       //required for fighter only
       type: Date,
       validate: {
         validator: function (value) {
-          return this.role !== "fighter" || (this.role === "fighter" && value);
+          return this.role !== 'fighter' || (this.role === 'fighter' && value);
         },
-        message: "Please provide date of birth",
+        message: 'Please provide date of birth',
       },
     },
     gymAffiliation: { type: String },
@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema(
           validator: function (value) {
             return !this.business.name || (this.business.name && value);
           },
-          message: "Business registration number is required",
+          message: 'Business registration number is required',
         },
       },
       address: {
@@ -70,7 +70,7 @@ const userSchema = new mongoose.Schema(
             validator: function (value) {
               return !this.business.name || (this.business.name && value);
             },
-            message: "Please enter the street where your business is located.",
+            message: 'Please enter the street where your business is located.',
           },
         },
         city: {
@@ -80,7 +80,7 @@ const userSchema = new mongoose.Schema(
             validator: function (value) {
               return !this.business.name || (this.business.name && value);
             },
-            message: "Please enter the city where your business is located.",
+            message: 'Please enter the city where your business is located.',
           },
         },
         postalCode: {
@@ -100,7 +100,7 @@ const userSchema = new mongoose.Schema(
             validator: function (value) {
               return !this.business.name || (this.business.name && value);
             },
-            message: "Please enter the country where your business is located.",
+            message: 'Please enter the country where your business is located.',
           },
         },
         town: { type: String },
@@ -110,17 +110,20 @@ const userSchema = new mongoose.Schema(
     },
     website: {
       type: String,
-      match: [/^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/, "Please enter a valid website URL"],
+      match: [
+        /^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/,
+        'Please enter a valid website URL',
+      ],
     },
     userIsVerified: {
       type: Boolean,
       default: false,
-      required: [true, "Please provide user verification status"],
+      required: [true, 'Please provide user verification status'],
     },
     emailIsVerified: {
       type: Boolean,
       default: false,
-      required: [true, "Please provide email verification status"],
+      required: [true, 'Please provide email verification status'],
     },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
@@ -130,15 +133,18 @@ userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ role: 1 });
 userSchema.index({ userIsVerified: 1 });
 
-userSchema.virtual("fullName").get(function () {
+userSchema.virtual('fullName').get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
-userSchema.pre("save", async function (next) {
-  if (this.business?.verificationNumber && this.isModified("business.verificationNumber")) {
+userSchema.pre('save', async function (next) {
+  if (
+    this.business?.verificationNumber &&
+    this.isModified('business.verificationNumber')
+  ) {
     this.business.isVerified = false; //assign a default value of false to the business verified field if verification number is supplied
   }
-  if (this.password && this.isModified("password")) {
+  if (this.password && this.isModified('password')) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(this.password, salt);
     this.password = hashedPassword;
@@ -146,4 +152,4 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model('User', userSchema);

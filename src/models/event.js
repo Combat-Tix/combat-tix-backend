@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema(
   {
@@ -26,38 +26,38 @@ const eventSchema = new mongoose.Schema(
     },
     promoterId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Please provide promoter id."],
+      ref: 'User',
+      required: [true, 'Please provide promoter id.'],
     },
-    name: { type: String, required: [true, "Please provide Event name."] },
+    name: { type: String, required: [true, 'Please provide Event name.'] },
     venue: {
       type: String,
-      required: [true, "Please provide Event venue."],
+      required: [true, 'Please provide Event venue.'],
     },
     capacity: {
       type: Number,
-      required: [true, "Please provide Event capacity."],
+      required: [true, 'Please provide Event capacity.'],
     },
     location: {
       street: {
         type: String,
-        required: [true, "Please enter the street name."],
+        required: [true, 'Please enter the street name.'],
       },
       number: {
         type: Number,
-        required: [true, "Please enter venue number."],
+        required: [true, 'Please enter venue number.'],
       },
       city: {
         type: String,
-        required: [true, "Please enter the city name."],
+        required: [true, 'Please enter the city name.'],
       },
       postalCode: {
         type: String,
-        required: [true, "Please enter postal code."],
+        required: [true, 'Please enter postal code.'],
       },
       country: {
         type: String,
-        required: [true, "Please enter country name"],
+        required: [true, 'Please enter country name'],
       },
       town: { type: String },
       county: { type: String },
@@ -65,55 +65,62 @@ const eventSchema = new mongoose.Schema(
     eventDateTime: {
       date: {
         type: Date,
-        required: [true, "Please provide date for the event."],
+        required: [true, 'Please provide date for the event.'],
       },
       time: {
         type: String,
-        required: [true, "Please provide time for the event."],
+        required: [true, 'Please provide time for the event.'],
       },
     },
     eventType: {
       type: String,
-      enum: ["Boxing", "MMA", "Kickboxing", "BJJ", "Other"],
-      required: [true, "Please provide an event type."],
+      enum: ['Boxing', 'MMA', 'Kickboxing', 'BJJ', 'Other'],
+      required: [true, 'Please provide an event type.'],
     },
     ticketTypes: [
       {
         type: {
           type: String,
-          enum: ["VIP", "general", "standing", "seating"],
-          required: [true, "Please provide ticket type."],
+          enum: ['VIP', 'general', 'standing', 'seating'],
+          required: [true, 'Please provide ticket type.'],
         },
         price: {
           type: Number,
           required: function () {
             return !!this.type;
           },
-          message: (props) => `Please provide a price for the ${props.parent.type} ticket.`,
+          message: (props) =>
+            `Please provide a price for the ${props.parent.type} ticket.`,
         },
         capacity: {
           type: Number,
           required: function () {
             return !!this.type;
           },
-          message: (props) => `Please provide capacity for the ${props.parent.type} ticket.`,
+          message: (props) =>
+            `Please provide capacity for the ${props.parent.type} ticket.`,
         },
       },
     ],
     bannerURL: {
       type: String,
-      required: [true, "Please provide Banner Image."],
-      match: [/^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/, "Please enter a valid website URL"],
+      required: [true, 'Please provide Banner Image.'],
+      match: [
+        /^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/,
+        'Please enter a valid website URL',
+      ],
     },
     images: {
       type: [String],
       validate: {
         validator: function (urls) {
           return urls.every((url) =>
-            /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\/\S*)?$/.test(url)
+            /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\/\S*)?$/.test(
+              url
+            )
           );
         },
-        message: "Please enter a valid URL for each image",
+        message: 'Please enter a valid URL for each image',
       },
     },
     videos: {
@@ -121,7 +128,7 @@ const eventSchema = new mongoose.Schema(
     },
     splitPercentage: {
       type: Number,
-      required: [true, "Please provide split percentage."],
+      required: [true, 'Please provide split percentage.'],
     },
     totalAmount: {
       type: Number,
@@ -137,8 +144,8 @@ const eventSchema = new mongoose.Schema(
               {
                 fighterId: {
                   type: mongoose.Schema.Types.ObjectId,
-                  ref: "User",
-                  required: [true, "Please provide fighter id"],
+                  ref: 'User',
+                  required: [true, 'Please provide fighter id'],
                 },
               },
             ],
@@ -158,23 +165,26 @@ eventSchema.index({ eventType: 1 });
 eventSchema.index({ fights: 1 });
 
 //< -------- VALIDATIONS ---------->
-eventSchema.path("ticketTypes").validate(function (value) {
+eventSchema.path('ticketTypes').validate(function (value) {
   return value.length > 0;
-}, "Please provide at least one ticket type.");
+}, 'Please provide at least one ticket type.');
 
-eventSchema.path("ticketTypes").validate(function (value) {
+eventSchema.path('ticketTypes').validate(function (value) {
   const ticketSet = new Set(value.map((ticket) => ticket.type));
   return ticketSet === value;
-}, "Each ticket type must be unique.");
+}, 'Each ticket type must be unique.');
 
-eventSchema.path("capacity").validate(function (value) {
-  const totalCapacityForAllTicketTypes = this.ticketTypes.reduce((total, ticket) => {
-    return total + ticket.capacity;
-  }, 0);
+eventSchema.path('capacity').validate(function (value) {
+  const totalCapacityForAllTicketTypes = this.ticketTypes.reduce(
+    (total, ticket) => {
+      return total + ticket.capacity;
+    },
+    0
+  );
   return totalCapacityForAllTicketTypes === value;
-}, "Event Capacity does not match the total capacity of all ticket types.");
+}, 'Event Capacity does not match the total capacity of all ticket types.');
 
-export default mongoose.model("Event", eventSchema);
+export default mongoose.model('Event', eventSchema);
 
 // Consider validating unique fighter IDs in 1v1 matches.
 

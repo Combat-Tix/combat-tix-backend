@@ -1,246 +1,270 @@
-import mongoose from "mongoose";
-import Event from "../../models/event";
+import mongoose from 'mongoose';
+import Event from '../../models/event';
 
-describe("Event Model Tests", () => {
-  describe("Promoter Id Field", () => {
-    it("Should throw an Error if the promoter id is not provided", () => {
+describe('Event Model Tests', () => {
+  describe('Promoter Id Field', () => {
+    it('Should throw an Error if the promoter id is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.promoterId).toBeDefined();
-      expect(validationError.errors.promoterId.message).toBe("Please provide promoter id.");
+      expect(validationError.errors.promoterId.message).toBe(
+        'Please provide promoter id.'
+      );
     });
-    it("Should throw an Error if the promoter id is not of valid mongodb object id type", () => {
-      const event = new Event({ promoterId: "1234" });
+    it('Should throw an Error if the promoter id is not of valid mongodb object id type', () => {
+      const event = new Event({ promoterId: '1234' });
       const validationError = event.validateSync();
       expect(validationError.errors.promoterId).toBeDefined();
     });
-    it("Should pass if the promoter id is of valid mongodb object id type", () => {
+    it('Should pass if the promoter id is of valid mongodb object id type', () => {
       const event = new Event({
-        promoterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+        promoterId: new mongoose.Types.ObjectId('6696475178b2ced7e1b87d40'),
       });
       const validationError = event.validateSync();
       expect(validationError.errors.promoterId).not.toBeDefined();
     });
   });
-  describe("Name Field", () => {
-    it("Should throw an Error if the Event name is not provided", () => {
+  describe('Name Field', () => {
+    it('Should throw an Error if the Event name is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.name).toBeDefined();
-      expect(validationError.errors.name.message).toBe("Please provide Event name.");
+      expect(validationError.errors.name.message).toBe(
+        'Please provide Event name.'
+      );
     });
-    it("Should pass if the event name is of valid String type", () => {
-      const event = new Event({ name: "O2 Arena" });
+    it('Should pass if the event name is of valid String type', () => {
+      const event = new Event({ name: 'O2 Arena' });
       const validationError = event.validateSync();
       expect(validationError.errors.name).not.toBeDefined();
     });
   });
-  describe("Venue Field", () => {
-    it("Should throw an Error if the Event venue is not provided", () => {
+  describe('Venue Field', () => {
+    it('Should throw an Error if the Event venue is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.venue).toBeDefined();
-      expect(validationError.errors.venue.message).toBe("Please provide Event venue.");
+      expect(validationError.errors.venue.message).toBe(
+        'Please provide Event venue.'
+      );
     });
-    it("Should pass if the event venue is of valid String type", () => {
-      const event = new Event({ venue: "O2 Arena" });
+    it('Should pass if the event venue is of valid String type', () => {
+      const event = new Event({ venue: 'O2 Arena' });
       const validationError = event.validateSync();
       expect(validationError.errors.venue).not.toBeDefined();
     });
   });
-  describe("Capacity Field ", () => {
-    it("Should throw an Error if the Event capacity is not provided", () => {
+  describe('Capacity Field ', () => {
+    it('Should throw an Error if the Event capacity is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.capacity).toBeDefined();
-      expect(validationError.errors.capacity.message).toBe("Please provide Event capacity.");
+      expect(validationError.errors.capacity.message).toBe(
+        'Please provide Event capacity.'
+      );
     });
-    it("Should throw an Error if the Event capacity is not of valid Number type", () => {
-      const event = new Event({ capacity: "12340xxx" });
+    it('Should throw an Error if the Event capacity is not of valid Number type', () => {
+      const event = new Event({ capacity: '12340xxx' });
       const validationError = event.validateSync();
       expect(validationError.errors.capacity).toBeDefined();
     });
-    it("Should pass if the Event capacity is of valid Number type", () => {
+    it('Should pass if the Event capacity is of valid Number type', () => {
       const event = new Event({
         capacity: 10000,
         ticketTypes: [
-          { type: "VIP", price: 2000, capacity: 5000 },
-          { type: "standing", price: 2000, capacity: 5000 },
+          { type: 'VIP', price: 2000, capacity: 5000 },
+          { type: 'standing', price: 2000, capacity: 5000 },
         ],
       });
       const validationError = event.validateSync();
       expect(validationError.errors.capacity).not.toBeDefined();
     });
-    it("Should throw an error if the Event capacity does not equal the total capacity of the ticket types", async () => {
+    it('Should throw an error if the Event capacity does not equal the total capacity of the ticket types', async () => {
       const event = new Event({
         capacity: 10000,
         ticketTypes: [
-          { type: "VIP", price: 2000, capacity: 100 },
-          { type: "standing", price: 2000, capacity: 500 },
+          { type: 'VIP', price: 2000, capacity: 100 },
+          { type: 'standing', price: 2000, capacity: 500 },
         ],
       });
       const validationErrors = event.validateSync();
       expect(validationErrors.errors.capacity).toBeDefined();
       expect(validationErrors.errors.capacity.message).toBe(
-        "Event Capacity does not match the total capacity of all ticket types."
+        'Event Capacity does not match the total capacity of all ticket types.'
       );
     });
-    it("Should pass if the Event capacity equal the total capacity of the ticket types", async () => {
+    it('Should pass if the Event capacity equal the total capacity of the ticket types', async () => {
       const event = new Event({
         capacity: 10000,
         ticketTypes: [
-          { type: "VIP", price: 2000, capacity: 5000 },
-          { type: "standing", price: 2000, capacity: 5000 },
+          { type: 'VIP', price: 2000, capacity: 5000 },
+          { type: 'standing', price: 2000, capacity: 5000 },
         ],
       });
       const validationErrors = event.validateSync();
       expect(validationErrors.errors.capacity).not.toBeDefined();
     });
   });
-  describe.skip("Location Field", () => {
+  describe.skip('Location Field', () => {
     //<---------- add more test here
-    it("Should throw an Error if the Event location is not provided", () => {
+    it('Should throw an Error if the Event location is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.location).toBeDefined();
-      expect(validationError.errors.location.message).toBe("Please provide Event location.");
+      expect(validationError.errors.location.message).toBe(
+        'Please provide Event location.'
+      );
     });
-    it("Should pass if the event venue is of valid String type", () => {
-      const event = new Event({ location: "No. 50 02 arena" });
+    it('Should pass if the event venue is of valid String type', () => {
+      const event = new Event({ location: 'No. 50 02 arena' });
       const validationError = event.validateSync();
       expect(validationError.errors.location).not.toBeDefined();
     });
   });
-  describe.skip("Event Date Time Field", () => {
-    describe("Date field", () => {
-      it("Should throw an Error if the Event date is not provided", () => {
+  describe.skip('Event Date Time Field', () => {
+    describe('Date field', () => {
+      it('Should throw an Error if the Event date is not provided', () => {
         const event = new Event({});
         const validationError = event.validateSync();
         expect(validationError.errors.eventDateTime.date).toBeDefined();
-        expect(validationError.errors.eventDateTime.date.message).toBe("Please provide date for the event.");
+        expect(validationError.errors.eventDateTime.date.message).toBe(
+          'Please provide date for the event.'
+        );
       });
-      it("Should throw an Error if the Event date is not of valid Date type", () => {
-        const event = new Event({ eventDateTime: { date: "xxxx" } });
+      it('Should throw an Error if the Event date is not of valid Date type', () => {
+        const event = new Event({ eventDateTime: { date: 'xxxx' } });
         const validationError = event.validateSync();
         expect(validationError.errors.eventDateTime.date).toBeDefined();
       });
-      it("Should pass if the Event date is of valid Date type", () => {
+      it('Should pass if the Event date is of valid Date type', () => {
         const event = new Event({ eventDateTime: { date: Date.now() } });
         const validationError = event.validateSync();
         expect(validationError.errors.eventDateTime.date).not.toBeDefined();
       });
     });
-    describe("Time field", () => {
-      it("Should throw an Error if the Event time is not provided", () => {
+    describe('Time field', () => {
+      it('Should throw an Error if the Event time is not provided', () => {
         const event = new Event({});
         const validationError = event.validateSync();
         expect(validationError.errors.eventDateTime.time).toBeDefined();
-        expect(validationError.errors.eventDateTime.time.message).toBe("Please provide time for the event.");
+        expect(validationError.errors.eventDateTime.time.message).toBe(
+          'Please provide time for the event.'
+        );
       });
 
-      it("Should pass if the Event time is of valid Date type", () => {
-        const event = new Event({ eventDateTime: { time: "10:00 am" } });
+      it('Should pass if the Event time is of valid Date type', () => {
+        const event = new Event({ eventDateTime: { time: '10:00 am' } });
         const validationError = event.validateSync();
         expect(validationError.errors.eventDateTime.time).not.toBeDefined();
       });
     });
   });
-  describe("Event Type Field", () => {
-    it("Should throw an Error if the Event type is not provided", () => {
+  describe('Event Type Field', () => {
+    it('Should throw an Error if the Event type is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.eventType).toBeDefined();
-      expect(validationError.errors.eventType.message).toBe("Please provide an event type.");
+      expect(validationError.errors.eventType.message).toBe(
+        'Please provide an event type.'
+      );
     });
-    it("Should pass if the Event Type is of valid String type", () => {
-      const event = new Event({ eventType: "Boxing" });
+    it('Should pass if the Event Type is of valid String type', () => {
+      const event = new Event({ eventType: 'Boxing' });
       const validationError = event.validateSync();
       expect(validationError.errors.eventType).not.toBeDefined();
     });
   });
-  describe("Banner URL", () => {
-    it("Should throw an Error if the Banner URL is not provided", () => {
+  describe('Banner URL', () => {
+    it('Should throw an Error if the Banner URL is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.bannerURL).toBeDefined();
-      expect(validationError.errors.bannerURL.message).toBe("Please provide Banner Image.");
+      expect(validationError.errors.bannerURL.message).toBe(
+        'Please provide Banner Image.'
+      );
     });
-    it("Should pass if the Banner URL is a valid URL", () => {
-      const event = new Event({ bannerURL: "https://www.banner.com" });
+    it('Should pass if the Banner URL is a valid URL', () => {
+      const event = new Event({ bannerURL: 'https://www.banner.com' });
       const validationError = event.validateSync();
       expect(validationError.errors.bannerURL).not.toBeDefined();
     });
   });
-  describe("Images field", () => {
-    it("Should pass if the Images is of valid Array type", () => {
+  describe('Images field', () => {
+    it('Should pass if the Images is of valid Array type', () => {
       const event = new Event({ images: [] });
 
       const validationError = event.validateSync();
       expect(validationError.errors.images).not.toBeDefined();
     });
   });
-  describe("Videos field", () => {
-    it("Should pass if the Videos is of valid Array type", () => {
+  describe('Videos field', () => {
+    it('Should pass if the Videos is of valid Array type', () => {
       const event = new Event({ videos: [] });
       const validationError = event.validateSync();
       expect(validationError.errors.videos).not.toBeDefined();
     });
   });
-  describe("Split Percentage Field ", () => {
-    it("Should throw an Error if the Split Percentage is not provided", () => {
+  describe('Split Percentage Field ', () => {
+    it('Should throw an Error if the Split Percentage is not provided', () => {
       const event = new Event({});
       const validationError = event.validateSync();
       expect(validationError.errors.splitPercentage).toBeDefined();
-      expect(validationError.errors.splitPercentage.message).toBe("Please provide split percentage.");
+      expect(validationError.errors.splitPercentage.message).toBe(
+        'Please provide split percentage.'
+      );
     });
-    it("Should throw an Error if the Split Percentage is not of valid Number type", () => {
-      const event = new Event({ splitPercentage: "12340xxx" });
+    it('Should throw an Error if the Split Percentage is not of valid Number type', () => {
+      const event = new Event({ splitPercentage: '12340xxx' });
       const validationError = event.validateSync();
       expect(validationError.errors.splitPercentage).toBeDefined();
     });
-    it("Should pass if the Split Percentage is of valid Number type", () => {
+    it('Should pass if the Split Percentage is of valid Number type', () => {
       const event = new Event({ splitPercentage: 10000 });
       const validationError = event.validateSync();
       expect(validationError.errors.splitPercentage).not.toBeDefined();
     });
   });
-  describe("Total amount Field ", () => {
-    it("Should throw an Error if the Total amount is not of valid Number type", () => {
-      const event = new Event({ totalAmount: "12340xxx" });
+  describe('Total amount Field ', () => {
+    it('Should throw an Error if the Total amount is not of valid Number type', () => {
+      const event = new Event({ totalAmount: '12340xxx' });
       const validationError = event.validateSync();
       expect(validationError.errors.totalAmount).toBeDefined();
     });
-    it("Should the Total amount default to 0 if not provided ", () => {
+    it('Should the Total amount default to 0 if not provided ', () => {
       const event = new Event({});
       expect(event.totalAmount).toBe(0);
     });
-    it("Should pass if the Total amount is of valid Number type", () => {
+    it('Should pass if the Total amount is of valid Number type', () => {
       const event = new Event({ totalAmount: 10000 });
       const validationError = event.validateSync();
       expect(validationError.errors.totalAmount).not.toBeDefined();
     });
   });
-  describe("Promo code Field ", () => {
-    it("Should promo code be visible in the event if provided", () => {
-      const event = new Event({ promoCode: "12340xxx" });
+  describe('Promo code Field ', () => {
+    it('Should promo code be visible in the event if provided', () => {
+      const event = new Event({ promoCode: '12340xxx' });
       expect(event.promoCode).toBeDefined();
     });
   });
-  describe.skip("Ticket Types", () => {
-    it("Should throw an error when no ticket type is not provided", () => {
+  describe.skip('Ticket Types', () => {
+    it('Should throw an error when no ticket type is not provided', () => {
       const event = new Event({});
       const validationErrors = event.validateSync();
       expect(validationErrors.errors.ticketTypes).toBeDefined();
-      expect(validationErrors.errors.ticketTypes.message).toBe("Please provide at least one ticket type.");
+      expect(validationErrors.errors.ticketTypes.message).toBe(
+        'Please provide at least one ticket type.'
+      );
     });
-    describe("Type Field", () => {
-      it("Should throw an error when ticket type is not provided in an object of a ticket types array", () => {
-        const event = new Event({ ticketTypes: [{ type: "" }] });
+    describe('Type Field', () => {
+      it('Should throw an error when ticket type is not provided in an object of a ticket types array', () => {
+        const event = new Event({ ticketTypes: [{ type: '' }] });
         const validationErrors = event.validateSync();
         expect(validationErrors.errors.ticketTypes[0].type).toBeDefined();
-        expect(validationErrors.errors.ticketTypes[0].type.message).toBe("Please provide ticket type.");
+        expect(validationErrors.errors.ticketTypes[0].type.message).toBe(
+          'Please provide ticket type.'
+        );
       });
-      ["VIP", "general", "standing", "seating"].map((type) => {
+      ['VIP', 'general', 'standing', 'seating'].map((type) => {
         it.skip(`Should pass when the ${type} ticket type is provided as a ticket type`, () => {
           const event = new Event({
             ticketTypes: [{ type }],
@@ -249,69 +273,75 @@ describe("Event Model Tests", () => {
           expect(validationErrors.errors.ticketTypes[0].type).not.toBeDefined();
         });
       });
-      it.skip("Should throw an error when an invalid ticket type is provided", () => {
+      it.skip('Should throw an error when an invalid ticket type is provided', () => {
         const event = new Event({
-          ticketTypes: [{ type: "invalid-type" }],
+          ticketTypes: [{ type: 'invalid-type' }],
         });
         const validationErrors = event.validateSync();
         expect(validationErrors.errors.ticketTypes[0].type).toBeDefined();
       });
-      it.skip("Should throw an error if the same ticket type is provided", async () => {
+      it.skip('Should throw an error if the same ticket type is provided', async () => {
         const event = new Event({
           capacity: 10000,
           ticketTypes: [
-            { type: "VIP", price: 2000, capacity: 100 },
-            { type: "VIP", price: 2000, capacity: 500 },
+            { type: 'VIP', price: 2000, capacity: 100 },
+            { type: 'VIP', price: 2000, capacity: 500 },
           ],
         });
         const validationErrors = event.validateSync();
         expect(validationErrors.errors.ticketTypes).toBeDefined();
-        expect(validationErrors.errors.ticketTypes.message).toBe("Each ticket type must be unique.");
+        expect(validationErrors.errors.ticketTypes.message).toBe(
+          'Each ticket type must be unique.'
+        );
       });
     });
-    describe.skip("Price Field", () => {
-      it("Should throw an error when the ticket type is provided without a corresponding price", () => {
+    describe.skip('Price Field', () => {
+      it('Should throw an error when the ticket type is provided without a corresponding price', () => {
         const event = new Event({
-          ticketTypes: [{ type: "seating", price: "" }],
+          ticketTypes: [{ type: 'seating', price: '' }],
         });
         const validationErrors = event.validateSync();
         expect(validationErrors.errors.ticketTypes[0].price).toBeDefined();
       });
-      it("Should pass when the ticket type is provided with a corresponding price", () => {
+      it('Should pass when the ticket type is provided with a corresponding price', () => {
         const event = new Event({
-          ticketTypes: [{ type: "seating", price: 5000 }],
+          ticketTypes: [{ type: 'seating', price: 5000 }],
         });
         const validationErrors = event.validateSync();
         expect(validationErrors.errors.ticketTypes[0].price).not.toBeDefined();
       });
     });
   });
-  describe.skip("Fights", () => {
-    describe("Team Name Field", () => {
-      it("Should the teamName be available if provided when a promoter creates a fight", () => {
+  describe.skip('Fights', () => {
+    describe('Team Name Field', () => {
+      it('Should the teamName be available if provided when a promoter creates a fight', () => {
         const event = new Event({
-          fights: [{ teams: [{ teamName: "Red warriors" }] }],
+          fights: [{ teams: [{ teamName: 'Red warriors' }] }],
         });
-        expect(event.fights[0].teams[0].teamName).toBe("Red warriors");
+        expect(event.fights[0].teams[0].teamName).toBe('Red warriors');
       });
     });
-    describe("Fighters", () => {
-      describe("Fighters ID", () => {
-        it("Should throw an error if the fighter Id is not provided", () => {
+    describe('Fighters', () => {
+      describe('Fighters ID', () => {
+        it('Should throw an error if the fighter Id is not provided', () => {
           const event = new Event({
             fights: [{ teams: [{ fighters: [{}] }] }],
           });
           const validationErrors = event.validateSync();
-          expect(validationErrors.errors.fights[0].teams[0].fighters[0].fighterId).toBeDefined();
+          expect(
+            validationErrors.errors.fights[0].teams[0].fighters[0].fighterId
+          ).toBeDefined();
         });
-        it("Should throw an error if the fighter Id provided is not of valid mongodb object type", () => {
+        it('Should throw an error if the fighter Id provided is not of valid mongodb object type', () => {
           const event = new Event({
-            fights: [{ teams: [{ fighters: [{ fighterId: "123" }] }] }],
+            fights: [{ teams: [{ fighters: [{ fighterId: '123' }] }] }],
           });
           const validationErrors = event.validateSync();
-          expect(validationErrors.errors.fights[0].teams[0].fighters[0].fighterId).toBeDefined();
+          expect(
+            validationErrors.errors.fights[0].teams[0].fighters[0].fighterId
+          ).toBeDefined();
         });
-        it("Should pass if the fighter Id provided is of valid mongodb object type", () => {
+        it('Should pass if the fighter Id provided is of valid mongodb object type', () => {
           const event = new Event({
             fights: [
               {
@@ -319,7 +349,9 @@ describe("Event Model Tests", () => {
                   {
                     fighters: [
                       {
-                        fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                        fighterId: new mongoose.Types.ObjectId(
+                          '6696475178b2ced7e1b87d40'
+                        ),
                       },
                     ],
                   },
@@ -328,13 +360,15 @@ describe("Event Model Tests", () => {
             ],
           });
           const validationErrors = event.validateSync();
-          expect(validationErrors.errors.fights[0].teams[0].fighters[0].fighterId).not.toBeDefined();
+          expect(
+            validationErrors.errors.fights[0].teams[0].fighters[0].fighterId
+          ).not.toBeDefined();
         });
       });
     });
 
-    describe("Functionality", () => {
-      it("Should allow promoter create a 1 X 1 fight match", () => {
+    describe('Functionality', () => {
+      it('Should allow promoter create a 1 X 1 fight match', () => {
         const event = new Event({
           fights: [
             {
@@ -342,14 +376,18 @@ describe("Event Model Tests", () => {
                 {
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
                 {
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
@@ -361,7 +399,7 @@ describe("Event Model Tests", () => {
         expect(event.fights[0].teams[0].fighters[0].fighterId).toBeDefined();
         expect(event.fights[0].teams[1].fighters[0].fighterId).toBeDefined();
       });
-      it("Should allow promoter create a tag team ( 2 X 2 ) fight match", () => {
+      it('Should allow promoter create a tag team ( 2 X 2 ) fight match', () => {
         const event = new Event({
           fights: [
             {
@@ -369,20 +407,28 @@ describe("Event Model Tests", () => {
                 {
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
                 {
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
@@ -396,32 +442,38 @@ describe("Event Model Tests", () => {
         expect(event.fights[0].teams[1].fighters[0].fighterId).toBeDefined();
         expect(event.fights[0].teams[1].fighters[1].fighterId).toBeDefined();
       });
-      it("Should allow promoter create a Battle Royal match ( 3 X 3 ) fight match or more", () => {
+      it('Should allow promoter create a Battle Royal match ( 3 X 3 ) fight match or more', () => {
         const event = new Event({
           fights: [
             {
               teams: [
                 {
-                  teamName: "Black diamond",
+                  teamName: 'Black diamond',
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
                 {
-                  teamName: "red diamond",
+                  teamName: 'red diamond',
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
                 {
-                  teamName: "Red warriors",
+                  teamName: 'Red warriors',
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
@@ -434,24 +486,28 @@ describe("Event Model Tests", () => {
         expect(event.fights[0].teams[1].fighters[0].fighterId).toBeDefined();
         expect(event.fights[0].teams[2].fighters[0].fighterId).toBeDefined();
       });
-      it("Should allow promoter create Two fights in an event", () => {
+      it('Should allow promoter create Two fights in an event', () => {
         const event = new Event({
           fights: [
             {
               teams: [
                 {
-                  teamName: "Black diamond",
+                  teamName: 'Black diamond',
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
                 {
-                  teamName: "red diamond",
+                  teamName: 'red diamond',
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
@@ -460,18 +516,22 @@ describe("Event Model Tests", () => {
             {
               teams: [
                 {
-                  teamName: "Black diamond Fight 2",
+                  teamName: 'Black diamond Fight 2',
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
                 {
-                  teamName: "red diamond Fight 2",
+                  teamName: 'red diamond Fight 2',
                   fighters: [
                     {
-                      fighterId: new mongoose.Types.ObjectId("6696475178b2ced7e1b87d40"),
+                      fighterId: new mongoose.Types.ObjectId(
+                        '6696475178b2ced7e1b87d40'
+                      ),
                     },
                   ],
                 },
