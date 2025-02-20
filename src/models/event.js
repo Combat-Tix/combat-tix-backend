@@ -1,4 +1,4 @@
-// biome-ignore lint/complexity/useArrowFunction: This file requires function expressions
+
 
 import mongoose from 'mongoose';
 
