@@ -43,6 +43,10 @@ const eventSchema = new mongoose.Schema(
         type: String,
         required: [true, "Please enter the street name."],
       },
+      number: {
+        type: Number,
+        required: [true, "Please enter venue number."],
+      },
       city: {
         type: String,
         required: [true, "Please enter the city name."],
