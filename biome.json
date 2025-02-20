@@ -13,7 +13,7 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "complexity":{
+      "complexity": {
         "useArrowFunction": "off"
       }
     }

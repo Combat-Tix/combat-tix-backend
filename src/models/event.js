@@ -1,5 +1,3 @@
-
-
 import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema(
@@ -173,7 +171,7 @@ eventSchema.path('ticketTypes').validate(function (value) {
 
 eventSchema.path('ticketTypes').validate(function (value) {
   const ticketSet = new Set(value.map((ticket) => ticket.type));
-  return ticketSet === value;
+  return ticketSet.size === value.length;
 }, 'Each ticket type must be unique.');
 
 eventSchema.path('capacity').validate(function (value) {
