@@ -3,21 +3,22 @@
   "version": "1.0.0",
   "description": "This is the backend repository for the Combattix application.",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
     "lint": "biome lint .",
     "format": "biome format . --write",
     "check": "biome check --apply ."
   },
+  "type": "module",
   "keywords": [],
   "author": "Combattix",
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.11.3",
     "@graphql-tools/schema": "^10.0.18",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.0.0"
