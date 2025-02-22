@@ -18,7 +18,7 @@ export const resolvers = {
       }
 
       try {
-        let query = {};
+        const query = {};
         if (after) {
           query._id = { $gt: new mongoose.Types.ObjectId(after) };
         }
@@ -79,7 +79,7 @@ export const resolvers = {
 
       try {
         // Build the query
-        let query = { [`flags.${flag}.value`]: value };
+        const query = { [`flags.${flag}.value`]: value };
         if (after) {
           query._id = { $gt: new mongoose.Types.ObjectId(after) };
         }
