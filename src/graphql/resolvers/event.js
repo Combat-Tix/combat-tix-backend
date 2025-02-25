@@ -52,12 +52,7 @@ export const resolvers = {
       }
     },
     getEventsByFlag: async (_, { flag, value, first = 10, after }) => {
-      const validFlags = [
-        "isHeroBanner",
-        "isFeatured",
-        "isMainEvent",
-        "isFeaturedCombat",
-      ];
+      const validFlags = ["isHeroBanner", "isFeatured", "isMainEvent"];
       if (!validFlags.includes(flag)) {
         throw new GraphQLError("Invalid flag", {
           extensions: { code: "BAD_USER_INPUT" },
@@ -169,7 +164,7 @@ export const resolvers = {
         });
       }
 
-      const validEventTypes = ["MMA", "Boxing", "Kickboxing", "BJJ", "Others"];
+      const validEventTypes = ["MMA", "Boxing", "Kickboxing", "BJJ", "Other"];
       if (!validEventTypes.includes(input.eventType)) {
         throw new GraphQLError("Invalid event type", {
           extensions: {
