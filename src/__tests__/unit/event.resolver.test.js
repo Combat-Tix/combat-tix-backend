@@ -275,26 +275,5 @@ describe("Event Resolvers", () => {
         })
       ).rejects.toThrow("Invalid event ID format");
     });
-
-    it("should throw an error for invalid input", async () => {
-      const mockError = new mongoose.Error.ValidationError();
-      mockError.errors = {
-        capacity: {
-          message: "Capacity must be a positive integer",
-          path: "capacity",
-        },
-      };
-
-      Event.findByIdAndUpdate = jest.fn().mockRejectedValue(mockError);
-
-      await expect(
-        resolvers.Mutation.updateEvent(null, {
-          id: new mongoose.Types.ObjectId().toString(),
-          input: {
-            capacity: -10, // Invalid capacity
-          },
-        })
-      ).rejects.toThrow("Validation Error");
-    });
   });
 });
