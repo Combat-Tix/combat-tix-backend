@@ -189,4 +189,112 @@ describe("Event Resolvers", () => {
       ).rejects.toThrow("Capacity must be a positive integer");
     });
   });
+
+  describe("Mutation.deleteEvent", () => {
+    it("should delete an event successfully", async () => {
+      const mockEvent = {
+        _id: new mongoose.Types.ObjectId(),
+        name: "MMA Championship",
+      };
+
+      Event.findByIdAndDelete = jest.fn().mockResolvedValue(mockEvent);
+
+      const result = await resolvers.Mutation.deleteEvent(null, {
+        id: mockEvent._id.toString(),
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.message).toBe("Event deleted successfully");
+      expect(result.id).toBe(mockEvent._id.toString());
+    });
+
+    it("should throw an error if the event is not found", async () => {
+      Event.findByIdAndDelete = jest.fn().mockResolvedValue(null);
+
+      await expect(
+        resolvers.Mutation.deleteEvent(null, {
+          id: new mongoose.Types.ObjectId().toString(),
+        })
+      ).rejects.toThrow("Event not found");
+    });
+
+    it("should throw an error if the ID is invalid", async () => {
+      await expect(
+        resolvers.Mutation.deleteEvent(null, { id: "invalid-id" })
+      ).rejects.toThrow("Invalid event ID format");
+    });
+  });
+
+  describe("Mutation.updateEvent", () => {
+    it("should update an event successfully", async () => {
+      const mockEvent = {
+        _id: new mongoose.Types.ObjectId(),
+        name: "Updated Event Name",
+        venue: "Updated Venue",
+        capacity: 2000,
+        eventType: "MMA",
+      };
+
+      Event.findByIdAndUpdate = jest.fn().mockResolvedValue(mockEvent);
+
+      const result = await resolvers.Mutation.updateEvent(null, {
+        id: mockEvent._id.toString(),
+        input: {
+          name: "Updated Event Name",
+          venue: "Updated Venue",
+          capacity: 2000,
+          eventType: "MMA",
+        },
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.message).toBe("Event updated successfully");
+      expect(result.event.name).toBe("Updated Event Name");
+    });
+
+    it("should throw an error if the event is not found", async () => {
+      Event.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+
+      await expect(
+        resolvers.Mutation.updateEvent(null, {
+          id: new mongoose.Types.ObjectId().toString(),
+          input: {
+            name: "Updated Event Name",
+          },
+        })
+      ).rejects.toThrow("Event not found");
+    });
+
+    it("should throw an error if the ID is invalid", async () => {
+      await expect(
+        resolvers.Mutation.updateEvent(null, {
+          id: "invalid-id",
+          input: {
+            name: "Updated Event Name",
+          },
+        })
+      ).rejects.toThrow("Invalid event ID format");
+    });
+
+    it("should throw an error for invalid input", async () => {
+      const mockError = new mongoose.Error.ValidationError();
+      mockError.errors = {
+        capacity: {
+          message: "Capacity must be a positive integer",
+          path: "capacity",
+        },
+      };
+
+      Event.findByIdAndUpdate = jest.fn().mockRejectedValue(mockError);
+
+      await expect(
+        resolvers.Mutation.updateEvent(null, {
+          id: new mongoose.Types.ObjectId().toString(),
+          input: {
+            capacity: -10, // Invalid capacity
+          },
+        })
+      ).rejects.toThrow("Validation Error");
+    });
+  });
 });

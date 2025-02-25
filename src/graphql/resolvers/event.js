@@ -169,13 +169,7 @@ export const resolvers = {
         });
       }
 
-      const validEventTypes = [
-        "MMA",
-        "Boxing",
-        "Wrestling",
-        "Judo",
-        "Muay Thai",
-      ];
+      const validEventTypes = ["MMA", "Boxing", "Kickboxing", "BJJ", "Others"];
       if (!validEventTypes.includes(input.eventType)) {
         throw new GraphQLError("Invalid event type", {
           extensions: {
@@ -211,6 +205,76 @@ export const resolvers = {
           });
         }
         throw new GraphQLError("Failed to create event", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            details: error.message,
+          },
+        });
+      }
+    },
+    deleteEvent: async (_, { id }) => {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new GraphQLError("Invalid event ID format", {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
+      }
+
+      const event = await Event.findByIdAndDelete(id);
+
+      if (!event) {
+        throw new GraphQLError("Event not found", {
+          extensions: { code: "NOT_FOUND" },
+        });
+      }
+      try {
+        return {
+          success: true,
+          message: "Event deleted successfully",
+          id: event._id.toString(),
+        };
+      } catch (error) {
+        throw new GraphQLError("Failed to delete event", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            details: error.message,
+          },
+        });
+      }
+    },
+    updateEvent: async (_, { id, input }) => {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new GraphQLError("Invalid event ID format", {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
+      }
+
+      const event = await Event.findByIdAndUpdate(id, input, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!event) {
+        throw new GraphQLError("Event not found", {
+          extensions: { code: "NOT_FOUND" },
+        });
+      }
+      try {
+        return {
+          success: true,
+          message: "Event updated successfully",
+          event,
+        };
+      } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+          throw new GraphQLError("Validation Error", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              details: error.errors,
+            },
+          });
+        }
+
+        throw new GraphQLError("Failed to update event", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             details: error.message,

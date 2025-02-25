@@ -25,7 +25,6 @@ export const typeDefs = `#graphql
     isHeroBanner: FlagDetail
     isFeatured: FlagDetail
     isMainEvent: FlagDetail
-    isFeaturedCombat: FlagDetail
   }
 
   type FlagDetail {
@@ -45,7 +44,8 @@ export const typeDefs = `#graphql
 
   type EventDateTime {
     date: String
-    time: String
+    startTime: String
+    endTime: String
   }
 
   type TicketType {
@@ -89,7 +89,6 @@ export const typeDefs = `#graphql
     isHeroBanner: FlagDetailInput
     isFeatured: FlagDetailInput
     isMainEvent: FlagDetailInput
-    isFeaturedCombat: FlagDetailInput
   }
 
   input FlagDetailInput {
@@ -109,7 +108,8 @@ export const typeDefs = `#graphql
 
   input EventDateTimeInput {
     date: String
-    time: String
+    startTime: String
+    endTime: String
   }
 
   input TicketTypeInput {
@@ -154,5 +154,25 @@ export const typeDefs = `#graphql
 
   type Mutation {
     createEvent(input: EventInput!): Event
+  }
+
+    type Mutation {
+    updateEvent(id: ID!, input: EventInput!): UpdateEventResponse
+  }
+
+  type UpdateEventResponse {
+    success: Boolean!
+    message: String!
+    event: Event
+  }
+
+  type Mutation {
+    deleteEvent(id: ID!): DeleteEventResponse
+  }
+
+  type DeleteEventResponse {
+    success: Boolean!
+    message: String!
+    id: ID
   }
 `;
