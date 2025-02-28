@@ -111,16 +111,10 @@ const eventSchema = new mongoose.Schema(
     },
     images: {
       type: [String],
-      validate: {
-        validator: (urls) => {
-          return urls.every((url) =>
-            /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\/\S*)?$/.test(
-              url
-            )
-          );
-        },
-        message: "Please enter a valid URL for each image",
-      },
+      match: [
+        /^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/,
+        "Please enter a valid URL for each image",
+      ],
     },
     videos: {
       type: Array,
