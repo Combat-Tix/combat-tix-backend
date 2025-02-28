@@ -153,7 +153,8 @@ export const typeDefs = `#graphql
   type Query {
     getEvents(first: Int, after: ID): EventConnection
     getEvent(id: ID!): Event
-    getEventsByFlag(flag: String!, value: Boolean!, first: Int, after: ID): EventConnection 
+    getEventsByFlag(flag: String!, value: Boolean!, first: Int, after: ID): EventConnection
+    getUpcomingEvents(first: Int, after: ID): EventConnection 
   }
 
   type EventConnection {

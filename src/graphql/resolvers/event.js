@@ -139,6 +139,59 @@ export const resolvers = {
         });
       }
     },
+    getUpcomingEvents: async (_, { first = 10, after }) => {
+      try {
+        if (first < 1) {
+          throw new GraphQLError("First must be a positive integer", {
+            extensions: { code: "BAD_USER_INPUT" },
+          });
+        }
+
+        if (after && !mongoose.Types.ObjectId.isValid(after)) {
+          throw new GraphQLError("Invalid cursor ID", {
+            extensions: { code: "BAD_USER_INPUT" },
+          });
+        }
+
+        const query = {
+          "eventDateTime.date": { $gte: new Date().toISOString() },
+        };
+
+        if (after) {
+          query._id = { $gt: new mongoose.Types.ObjectId(after) };
+        }
+
+        const events = await Event.find(query)
+          .sort({ "eventDateTime.date": 1, _id: 1 })
+          .limit(first + 1);
+
+        const hasNextPage = events.length > first;
+        if (hasNextPage) {
+          events.pop();
+        }
+
+        return {
+          edges: events.map((event) => ({
+            cursor: event._id.toString(),
+            node: event,
+          })),
+          pageInfo: {
+            hasNextPage,
+            endCursor: events.length
+              ? events[events.length - 1]._id.toString()
+              : null,
+          },
+        };
+      } catch (error) {
+        console.error("Error fetching upcoming events:", error);
+        throw new GraphQLError("Failed to fetch upcoming events", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            details: error.message,
+          },
+        });
+      }
+    },
   },
 
   Mutation: {
