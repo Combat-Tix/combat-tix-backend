@@ -85,6 +85,25 @@ export const typeDefs = `#graphql
     fights: [FightInput]
   }
 
+    input UpdateEventInput {
+    flags: EventFlagsInput
+    promoterId: ID
+    name: String
+    venue: String
+    capacity: Int
+    location: LocationInput
+    eventDateTime: EventDateTimeInput
+    eventType: String
+    ticketTypes: [TicketTypeInput]
+    bannerURL: String
+    images: [String]
+    videos: [String]
+    splitPercentage: Float
+    promoCode: String
+    fights: [FightInput]
+  }
+
+
   input EventFlagsInput {
     isHeroBanner: FlagDetailInput
     isFeatured: FlagDetailInput
@@ -157,7 +176,7 @@ export const typeDefs = `#graphql
   }
 
     type Mutation {
-    updateEvent(id: ID!, input: EventInput!): UpdateEventResponse
+    updateEvent(id: ID!, input: UpdateEventInput): UpdateEventResponse
   }
 
   type UpdateEventResponse {
