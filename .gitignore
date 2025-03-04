@@ -6,3 +6,4 @@ logs/
 *.log
 .DS_Store
 /src/api
+/src/utils/updateData.js

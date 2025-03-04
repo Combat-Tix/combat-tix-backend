@@ -18,7 +18,6 @@ let server;
 const startServer = async () => {
   // MongoDB Connection
   await connectDB();
-
   server = new ApolloServer({
     typeDefs,
     resolvers,

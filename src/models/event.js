@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { formatLocation } from "../utils/formatter.js";
-import {convertToTimestamp} from "../utils/convertToTimestamp.js";
+import { convertToTimestamp } from "../utils/convertToTimestamp.js";
 
 const eventSchema = new mongoose.Schema(
   {
@@ -147,7 +147,7 @@ const eventSchema = new mongoose.Schema(
     //<---------- FOR SEARCH ENHANCEMENT ---------->
     popularity: {
       type: Number,
-      default: 1,
+      default: 1, //Math.floor(Math.random() * 101),
       required: [true, "Please provide the event popularity"],
     },
     eventTimeStamp: {

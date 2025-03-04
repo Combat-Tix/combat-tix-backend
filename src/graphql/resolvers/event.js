@@ -246,6 +246,7 @@ export const resolvers = {
             eventTimeStamp: event.eventTimeStamp,
             name: event.name,
             venue: event.venue,
+            eventType: event.eventType,
             fullLocation: event.fullLocation,
             eventDateTime: event.eventDateTime,
             images: event.images,
