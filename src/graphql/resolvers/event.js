@@ -39,9 +39,7 @@ export const resolvers = {
           })),
           pageInfo: {
             hasNextPage,
-            endCursor: events.length
-              ? events[events.length - 1]._id.toString()
-              : null,
+            endCursor: events.length ? events[events.length - 1]._id.toString() : null,
           },
         };
       } catch (error) {
@@ -96,9 +94,7 @@ export const resolvers = {
           })),
           pageInfo: {
             hasNextPage,
-            endCursor: events.length
-              ? events[events.length - 1]._id.toString()
-              : null,
+            endCursor: events.length ? events[events.length - 1]._id.toString() : null,
           },
         };
       } catch (error) {
@@ -177,9 +173,7 @@ export const resolvers = {
           })),
           pageInfo: {
             hasNextPage,
-            endCursor: events.length
-              ? events[events.length - 1]._id.toString()
-              : null,
+            endCursor: events.length ? events[events.length - 1]._id.toString() : null,
           },
         };
       } catch (error) {

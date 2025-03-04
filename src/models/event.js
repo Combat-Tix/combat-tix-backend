@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { formatLocation } from "../utils/formatter.js";
+import {convertToTimestamp} from "../utils/convertToTimestamp.js";
 
 const eventSchema = new mongoose.Schema(
   {
@@ -88,26 +90,21 @@ const eventSchema = new mongoose.Schema(
           required: function () {
             return !!this.type;
           },
-          message: (props) =>
-            `Please provide a price for the ${props.parent.type} ticket.`,
+          message: (props) => `Please provide a price for the ${props.parent.type} ticket.`,
         },
         capacity: {
           type: Number,
           required: function () {
             return !!this.type;
           },
-          message: (props) =>
-            `Please provide capacity for the ${props.parent.type} ticket.`,
+          message: (props) => `Please provide capacity for the ${props.parent.type} ticket.`,
         },
       },
     ],
     bannerURL: {
       type: String,
       required: [true, "Please provide Banner Image."],
-      match: [
-        /^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/,
-        "Please enter a valid website URL",
-      ],
+      match: [/^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\/[^\s]*)?$/, "Please enter a valid website URL"],
     },
     images: {
       type: [String],
@@ -146,6 +143,21 @@ const eventSchema = new mongoose.Schema(
         ],
       },
     ],
+
+    //<---------- FOR SEARCH ENHANCEMENT ---------->
+    popularity: {
+      type: Number,
+      default: 1,
+      required: [true, "Please provide the event popularity"],
+    },
+    eventTimeStamp: {
+      //<---------- This ensures we have a unix timestamp for the date merge with the start time of the event. This helps to get recent events
+      type: Number,
+    },
+
+    fullLocation: {
+      type: String,
+    },
   },
   { timestamps: true, validateBeforeSave: true }
 );
@@ -168,15 +180,22 @@ eventSchema.path("ticketTypes").validate(function (value) {
 }, "Each ticket type must be unique.");
 
 eventSchema.path("capacity").validate(function (value) {
-  const totalCapacityForAllTicketTypes = this.ticketTypes.reduce(
-    (total, ticket) => {
-      return total + ticket.capacity;
-    },
-    0
-  );
+  const totalCapacityForAllTicketTypes = this.ticketTypes.reduce((total, ticket) => {
+    return total + ticket.capacity;
+  }, 0);
   return totalCapacityForAllTicketTypes === value;
 }, "Event Capacity does not match the total capacity of all ticket types.");
 
+eventSchema.pre("save", async function (next) {
+  this.eventTimeStamp = await convertToTimestamp({
+    date: this.eventDateTime.date,
+    startTime: this.eventDateTime.startTime,
+  });
+
+  this.fullLocation = await formatLocation(this.location);
+
+  next();
+});
 export default mongoose.model("Event", eventSchema);
 
 // Consider validating unique fighter IDs in 1v1 matches.
