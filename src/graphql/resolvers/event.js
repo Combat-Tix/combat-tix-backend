@@ -1,6 +1,7 @@
 import Event from "../../models/event.js";
 import { GraphQLError } from "graphql";
 import mongoose from "mongoose";
+import { saveRecordToAlgolia } from "../../utils/algoliaUtil.js";
 
 export const resolvers = {
   Query: {
@@ -236,6 +237,21 @@ export const resolvers = {
       try {
         const event = new Event(input);
         await event.save();
+        //<---------- ADD THIS EVENT TO THE EVENT INDEX ON ALGOLIA ---------->
+        await saveRecordToAlgolia({
+          indexType: "events",
+          body: {
+            objectID: event._id.toString(),
+            popularity: event.popularity,
+            eventTimeStamp: event.eventTimeStamp,
+            name: event.name,
+            venue: event.venue,
+            fullLocation: event.fullLocation,
+            eventDateTime: event.eventDateTime,
+            images: event.images,
+          },
+        });
+
         return event;
       } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {

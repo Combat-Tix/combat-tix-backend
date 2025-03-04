@@ -20,6 +20,7 @@
     "@graphql-tools/load-files": "^7.0.1",
     "@graphql-tools/merge": "^9.0.19",
     "@graphql-tools/schema": "^10.0.18",
+    "algoliasearch": "5",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
