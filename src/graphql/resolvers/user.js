@@ -392,7 +392,9 @@ export const resolvers = {
         await sgMail.send(msg);
 
         return { message: "Password reset magic link sent successfully." };
-      } else if (phoneNumber) {
+      }
+
+      if (phoneNumber) {
         // Generate a 4-digit OTP
         const resetCode = Math.floor(1000 + Math.random() * 9000).toString();
         resetCodes.set(phoneNumber, resetCode);
@@ -405,14 +407,14 @@ export const resolvers = {
         });
 
         return { message: "Password reset OTP sent successfully." };
-      } else {
-        throw new GraphQLError(
-          "Please provide either an email or phone number.",
-          {
-            extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
-          }
-        );
       }
+
+      throw new GraphQLError(
+        "Please provide either an email or phone number.",
+        {
+          extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
+        }
+      );
     },
 
     async resetPassword(_, { email, phoneNumber, code, newPassword, token }) {
