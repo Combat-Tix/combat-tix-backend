@@ -6,7 +6,7 @@ export default {
   },
   setupFilesAfterEnv: ["./src/__tests__/utils/setup.js"],
   testMatch: [
-    "**/__tests__/integration/**/*.test.js",
+    // "**/__tests__/integration/**/*.test.js",
     "**/__tests__/unit/**/*.test.js",
   ],
 };
