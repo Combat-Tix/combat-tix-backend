@@ -13,6 +13,18 @@ export const typeDefs = `#graphql
   businessAddress: String
   gymAffiliation: String
   stageName: String
+  location: Location
+
+}
+
+type Location {
+  country: String
+  city: String
+}
+
+input LocationInput {
+  country: String
+  city: String
 }
 
 type AuthPayload {
@@ -49,6 +61,7 @@ type Mutation {
     businessAddress: String
     gymAffiliation: String
     stageName: String
+    location: LocationInput
   ): RegisterUserResponse!
 
   verifyEmail(email: String!, code: String!): MessageResponse!
@@ -66,10 +79,11 @@ type Mutation {
     businessAddress: String
     gymAffiliation: String
     stageName: String
+    location: LocationInput 
   ): User!
 
   requestPasswordReset(email: String!): MessageResponse!
-  resetPassword(email: String!, code: String!, newPassword: String!): MessageResponse!
+  resetPassword(email: String!, newPassword: String!,confirmPassword: String!, token: String!): MessageResponse!
 }
 
 `;

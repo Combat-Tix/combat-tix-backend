@@ -41,24 +41,15 @@ const userSchema = new mongoose.Schema(
     stageName: { type: String }, // Optional for fighters
     dateOfBirth: {
       type: Date,
-      required: function () {
-        return this.role === "fighter";
-      },
       message: "Please provide date of birth",
     },
     gymAffiliation: { type: String }, // Fighters can have gym affiliations
     location: {
       country: {
         type: String,
-        required: function () {
-          return this.role === "fighter";
-        },
       },
       city: {
         type: String,
-        required: function () {
-          return this.role === "fighter";
-        },
       },
     },
 

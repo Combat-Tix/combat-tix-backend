@@ -7,19 +7,8 @@ import { GraphQLError } from "graphql";
 import { emailTemplates } from "../../template/emailTemplates.js";
 import rateLimit from "express-rate-limit";
 
-// Rate limiter for password reset
-const resetPasswordLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 3, // Limit each IP to 3 requests per windowMs
-  message: "Too many password reset requests. Please try again later.",
-});
-
 dotenv.config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-// const twilioClient = twilio(
-//   process.env.TWILIO_ACCOUNT_SID,
-//   process.env.TWILIO_AUTH_TOKEN
-// );
 
 // Generate tokens
 const generateTokens = (user) => {
@@ -57,16 +46,15 @@ export const resolvers = {
           });
         }
 
-        // Create the user (password will be hashed by the pre-save hook)
         const user = new User({
           ...profileData,
           email,
-          password, // Pass the plain text password here
+          password,
           role,
           emailIsVerified: false,
         });
 
-        await user.save(); // This will trigger the pre-save hook to hash the password
+        await user.save();
 
         // Generate a 4-digit verification code
         const verificationCode = Math.floor(
@@ -367,105 +355,78 @@ export const resolvers = {
       return updatedUser;
     },
 
-    async requestPasswordReset(_, { email, phoneNumber }, { req }) {
-      const user = await User.findOne({ $or: [{ email }, { phoneNumber }] });
+    async requestPasswordReset(_, { email }, { req }) {
+      const user = await User.findOne({ email });
       if (!user) {
         throw new GraphQLError("User not found.", {
           extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
         });
       }
 
-      if (email) {
-        // Generate a JWT token for the magic link
-        const resetToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-          expiresIn: "15m",
-        });
+      // Generate a JWT token for the magic link
+      const resetToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "15m",
+      });
 
-        // Send the magic link via email
-        const magicLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-        const msg = {
-          to: email,
-          from: process.env.SENDGRID_SENDER_EMAIL,
-          subject: "Password Reset Request - Combat Tix",
-          html: emailTemplates.passwordResetMagicLink(user, magicLink),
-        };
-        await sgMail.send(msg);
+      // Send the magic link via email
+      const magicLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+      const msg = {
+        to: email,
+        from: process.env.SENDGRID_SENDER_EMAIL,
+        subject: "Password Reset Request - Combat Tix",
+        html: emailTemplates.passwordReset(user, magicLink),
+      };
+      await sgMail.send(msg);
 
-        return { message: "Password reset magic link sent successfully." };
-      }
-
-      if (phoneNumber) {
-        // Generate a 4-digit OTP
-        const resetCode = Math.floor(1000 + Math.random() * 9000).toString();
-        resetCodes.set(phoneNumber, resetCode);
-
-        // Send the OTP via SMS
-        await twilioClient.messages.create({
-          body: `Your Combat Tix password reset code is: ${resetCode}`,
-          from: process.env.TWILIO_PHONE_NUMBER,
-          to: phoneNumber,
-        });
-
-        return { message: "Password reset OTP sent successfully." };
-      }
-
-      throw new GraphQLError(
-        "Please provide either an email or phone number.",
-        {
-          extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
-        }
-      );
+      return { message: "Password reset magic link sent successfully." };
     },
 
-    async resetPassword(_, { email, phoneNumber, code, newPassword, token }) {
-      if (token) {
-        // Handle magic link reset
-        try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET);
-          const user = await User.findById(decoded.id);
-
-          if (!user) {
-            throw new GraphQLError("Invalid or expired token.", {
-              extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
-            });
+    async resetPassword(_, { email, newPassword, confirmPassword, token }) {
+      if (!email || !token || !newPassword || !confirmPassword) {
+        throw new GraphQLError(
+          "Email, token, newPassword, and confirmPassword are required.",
+          {
+            extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
           }
+        );
+      }
 
-          const hashedPassword = await bcrypt.hash(newPassword, 10);
-          await User.findByIdAndUpdate(user.id, { password: hashedPassword });
+      // Check if newPassword and confirmPassword match
+      if (newPassword !== confirmPassword) {
+        throw new GraphQLError(
+          "New password and confirm password do not match.",
+          {
+            extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
+          }
+        );
+      }
 
-          // Send the password reset confirmation email
-          const msg = {
-            to: user.email,
-            from: process.env.SENDGRID_SENDER_EMAIL,
-            subject: "Password Reset Successful - Combat Tix",
-            html: emailTemplates.passwordResetSuccess(user),
-          };
-          await sgMail.send(msg);
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
 
-          return { message: "Password reset successfully." };
-        } catch (error) {
+        if (!user || user.email !== email) {
           throw new GraphQLError("Invalid or expired token.", {
             extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
           });
         }
-      } else if (phoneNumber && code) {
-        // Handle SMS OTP reset
-        if (resetCodes.get(phoneNumber) !== code) {
-          throw new GraphQLError("Invalid or expired reset code.", {
-            extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
-          });
-        }
 
+        // Hash the new password and update the user
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await User.findOneAndUpdate(
-          { phoneNumber },
-          { password: hashedPassword }
-        );
-        resetCodes.delete(phoneNumber);
+        await User.findByIdAndUpdate(user.id, { password: hashedPassword });
+
+        // Send the password reset confirmation email
+        const msg = {
+          to: user.email,
+          from: process.env.SENDGRID_SENDER_EMAIL,
+          subject: "Password Reset Successful - Combat Tix",
+          html: emailTemplates.passwordResetSuccess(user),
+        };
+        await sgMail.send(msg);
 
         return { message: "Password reset successfully." };
-      } else {
-        throw new GraphQLError("Invalid reset method.", {
+      } catch (error) {
+        throw new GraphQLError("Invalid or expired token.", {
           extensions: { code: "BAD_USER_INPUT", http: { status: 400 } },
         });
       }
