@@ -4,73 +4,148 @@ Backend API for Combat Tix, a ticketing platform for combat sports events.
 
 ## Prerequisites
 
-- Node.js (v14 or higher) - v22.13.0
-- npm
-- pnpm (install with corepack) -v9.15.4
+- **Node.js (v14 or higher)** - v22.13.0
+- **npm**
+- **pnpm** (install with corepack) - v9.15.4
 
 ## Getting Started
 
 ### 1. Clone the Repository
+
 ```bash
-git clone [repository-url]
+git clone https://github.com/Combat-Tix/combat-tix-backend.git
 cd combat-tix-backend
 ```
 
-### 2. Install Dependencies
+Repository URL:- [https://github.com/Combat-Tix/combat-tix-backend.git](https://github.com/Combat-Tix/combat-tix-backend.git)
+
+The URL above was gotten from the GitHub Repository Code Tab: Local Dropdown container
+
+### 2. Download and install Node version manager from [NVM Releases](https://github.com/coreybutler/nvm-windows/releases)
+
+- Install node version:
+
+  ```bash
+  nvm install 22.13.0
+  ```
+
+- View all node versions installed:
+
+  ```bash
+  nvm list
+  ```
+
+- Switch node versions:
+
+  ```bash
+  nvm use 22.13.0
+  ```
+
+#### Why Node version manager
+
+To ensure consistency across the development environment, Node.js is installed using Node Version Manager (NVM). This approach prevents conflicts that may arise when different projects require
+different Node.js versions. If Node.js is installed directly from the official website, it will replace any existing version on the developer’s machine. This could cause compatibility issues with
+other projects that rely on an older version, potentially leading to problems with package installations. With NVM, multiple Node.js versions can coexist on the same machine, allowing developers to
+switch between them as needed. For this project, it is recommended to set Node.js version 22.13.0 as the default.
+
+### 3. Install PNPM with Corepack
+
+- Enable corepack in the project:
+
+```bash
+   corepack enable
+```
+
+- Install PNPM version 9.15.4
+
+```bash
+   corepack prepare pnpm@9.15.4 --activate
+```
+
+#### Why Corepack
+
+Corepack lets developers specify which version of a package manager (like npm, pnpm, or yarn) should be used in their project. This ensures that different projects can use different versions of
+package managers without conflicts. For example, one project can use npm@6 and another can use npm@7—and Corepack will handle this versioning automatically for each project.
+
+### 4. Install Dependencies
+
 ```bash
 pnpm install
 ```
 
-### 3. Environment Setup
+### 5. Environment Setup
+
 The project requires certain environment variables to run. Follow these steps:
 
-1. Copy the example environment file:
+Copy the example environment file:
+
 ```bash
 cp .env.example .env
 ```
 
-2. Update the `.env` file with the required values:
+Update the `.env` file with the required values:
+
 ```env
+ALGOLIA_API_KEY=
+ALGOLIA_APP_ID=
 PORT=4000                    # Port for the server to run on
 NODE_ENV=development         # Environment (development/production)
 MONGODB_URI=                 # MongoDB connection string (get from maintainer)
 API_KEY=your-secure-api-key  # API key for authenticating requests (get from maintainer)
 ```
 
-3. Contact the project maintainer to get the MongoDB connection string and any other required credentials.
+Contact the project maintainer to get any additional required credentials.
 
-Note: Never commit the `.env` file or share sensitive credentials.
+> **Note:** Never commit the `.env` file or share sensitive credentials.
 
-### 4. Start the Server
+### 6. Start the Server
+
+- Development mode
+
 ```bash
-# Development mode
-
-pnpm run dev
-
-# Production mode
-pnpm start
+   pnpm run dev
 ```
 
-### 5. Verify Setup
-This API uses an API key for authentication. The API key must be included in the request headers:
-```json 
+- Production mode
+
+```bash
+   pnpm start
+```
+
+### 7. Verify Setup
+
+In the VsCode terminal, you should see the following to confirm that the setup is correct.
+
+```txt
+MongoDB connected successfully
+Server running on port 4000
+GraphQL endpoint: http://localhost:4000/graphql
+```
+
+Visit [http://localhost:4000/graphql](http://localhost:4000/graphql) to access the Apollo Sandbox interface
+
+The API above uses an API key for authentication. The API key must be included in the request headers of the apollo sandbox
+
+```json
 {
-"x-api-key": "your-secure-api-key"
+  "x-api-key": "your-secure-api-key"
 }
 ```
 
-Visit http://localhost:4000/graphql to access the Apollo Sandbox interface. Test the setup with this query:
- ``` 
- query {
-   healthCheck {
-     status
-     database
-   }
+Test the setup with this query:
+
+```js
+query {
+  healthCheck {
+    status
+    database
+  }
 }
 ```
 
 Expected response:
-```
+
+```json
 {
    "data": {
      "healthCheck": {
@@ -107,8 +182,8 @@ pnpm run test:watch
 - Import testing libraries:
 
   ```javascript
-  import request from 'supertest';
-  import app from '../path/to/app';
+  import request from "supertest";
+  import app from "../path/to/app";
   ```
 
 ### Best Practices
@@ -131,19 +206,3 @@ pnpm run test:watch
 - `pnpm test`: Run integration tests
 - `pnpm run lint`: Run Biome linter
 - `pnpm run format`: Format code with Biome
-
-## Managing Different Node Versions with NVM
-
-- Download and install nvm from [https://github.com/coreybutler/nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases)
-
-- Install node version using `nvm install 22.13.0`
-
-- View all node versions installed with nvm `nvm list`
-
-- Switch node versions using `nvm use 22.13.0`
-
-## Installing PNPM with Corepack
-
-- Enable corepack in the project `corepack enable`
-
-- Install `PNPM` version 9.15.4 corepack prepare `pnpm@9.15.4 --activate`
