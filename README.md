@@ -142,8 +142,4 @@ pnpm run test:watch
 
 - Switch node versions using `nvm use 22.13.0`
 
-## Installing PNPM with Corepack
-
-- Enable corepack in the project `corepack enable`
-
-- Install `PNPM` version 9.15.4 corepack prepare `pnpm@9.15.4 --activate`
+e
