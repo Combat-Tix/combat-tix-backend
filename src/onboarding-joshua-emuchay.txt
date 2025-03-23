@@ -1,0 +1,5 @@
+# Joshua Emuchay - Onboarding Notes
+
+Joined on March 23rd, 2025.
+
+Excited to work with the team! Set up dev environment, cloned repo, reviewed codebase.
