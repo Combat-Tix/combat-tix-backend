@@ -6,3 +6,4 @@ logs/
 *.log
 .DS_Store
 /src/api
+package-lock.json
