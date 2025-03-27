@@ -369,14 +369,21 @@ export const resolvers = {
       });
 
       // Send the magic link via email
-      const magicLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+      const magicLink = `${process.env.FRONTEND_URL}/reset-password?email=${email}&token=${resetToken}`;
       const msg = {
         to: email,
         from: process.env.SENDGRID_SENDER_EMAIL,
         subject: "Password Reset Request - Combat Tix",
         html: emailTemplates.passwordReset(user, magicLink),
       };
-      await sgMail.send(msg);
+      try {
+        await sgMail.send(msg);
+      } catch (error) {
+        console.error("SendGrid Error:", error);
+        throw new GraphQLError("Failed to send password reset email.", {
+          extensions: { code: "INTERNAL_SERVER_ERROR", http: { status: 500 } },
+        });
+      }
 
       return { message: "Password reset magic link sent successfully." };
     },

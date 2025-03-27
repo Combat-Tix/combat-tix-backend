@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema(
       type: Date,
       message: "Please provide date of birth",
     },
-    gymAffiliation: { type: String }, // Fighters can have gym affiliations
+    gymAffiliation: { type: String },
+    companyName: { type: String },
     location: {
       country: {
         type: String,
@@ -56,17 +57,9 @@ const userSchema = new mongoose.Schema(
     // Fields Specific to Promoters
     businessType: {
       type: String,
-      required: function () {
-        return this.role === "promoter";
-      },
-      message: "Please select a business type",
     },
     businessAddress: {
       type: String,
-      required: function () {
-        return this.role === "promoter";
-      },
-      message: "Please enter your business address",
     },
     website: {
       type: String,

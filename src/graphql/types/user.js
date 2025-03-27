@@ -12,6 +12,7 @@ export const typeDefs = `#graphql
   businessType: String
   businessAddress: String
   gymAffiliation: String
+  companyName: String
   stageName: String
   location: Location
 
@@ -57,8 +58,6 @@ type Mutation {
     role: String!
     phoneNumber: String
     dateOfBirth: String
-    businessType: String
-    businessAddress: String
     gymAffiliation: String
     stageName: String
     location: LocationInput
@@ -79,9 +78,10 @@ type Mutation {
     businessAddress: String
     gymAffiliation: String
     stageName: String
-    location: LocationInput 
+    location: LocationInput
+    companyName:String
   ): User!
-
+                  
   requestPasswordReset(email: String!): MessageResponse!
   resetPassword(email: String!, newPassword: String!,confirmPassword: String!, token: String!): MessageResponse!
 }
