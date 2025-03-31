@@ -1,14 +1,14 @@
 import User from "../../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import sgMail from "@sendgrid/mail";
+import postmark from "postmark";
 import dotenv from "dotenv";
 import { GraphQLError } from "graphql";
 import { emailTemplates } from "../../template/emailTemplates.js";
 import rateLimit from "express-rate-limit";
 
 dotenv.config();
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const postmarkClient = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 
 // Generate tokens
 const generateTokens = (user) => {
@@ -75,11 +75,11 @@ export const resolvers = {
         // Send the verification email
         const msg = {
           to: email,
-          from: process.env.SENDGRID_SENDER_EMAIL,
+          from: process.env.POSTMARK_SENDER_EMAIL,
           subject: "Welcome to Combat Tix – Confirm Your Email",
-          html: emailTemplates.verificationEmail(user, verificationCode),
+          HtmlBody: emailTemplates.verificationEmail(user, verificationCode),
         };
-        await sgMail.send(msg);
+        await postmarkClient.sendEmail(msg);
 
         return {
           message: "User registered. Please verify your email.",
@@ -147,11 +147,11 @@ export const resolvers = {
 
         const msg = {
           to: email,
-          from: process.env.SENDGRID_SENDER_EMAIL,
+          from: process.env.POSTMARK_SENDER_EMAIL,
           subject: "Your Combat Tix Email is Verified!",
-          html: emailTemplates.emailVerified(user),
+          HtmlBody: emailTemplates.emailVerified(user),
         };
-        await sgMail.send(msg);
+        await postmarkClient.sendEmail(msg);
 
         return { message: "Email verified successfully." };
       } catch (error) {
@@ -194,11 +194,11 @@ export const resolvers = {
         // Send the new OTP via email
         const msg = {
           to: email,
-          from: process.env.SENDGRID_SENDER_EMAIL,
+          from: process.env.POSTMARK_SENDER_EMAIL,
           subject: "New Verification Code – Combat Tix",
-          html: emailTemplates.verificationEmail(user, newVerificationCode),
+          HtmlBody: emailTemplates.verificationEmail(user, newVerificationCode),
         };
-        await sgMail.send(msg);
+        await postmarkClient.sendEmail(msg);
 
         return {
           message: "A new verification code has been sent to your email.",
@@ -333,9 +333,9 @@ export const resolvers = {
       // Send the profile completion email
       const msg = {
         to: updatedUser.email,
-        from: process.env.SENDGRID_SENDER_EMAIL,
+        from: process.env.POSTMARK_SENDER_EMAIL,
         subject: `Welcome to Combat Tix, ${updatedUser.firstName}!`,
-        html: `
+        HtmlBody: `
           <p>Hi ${updatedUser.firstName},</p>
           <p>Congratulations! You’ve successfully set up your <strong>Combat Tix</strong> account.</p>
           <p>🎟 <strong>You can now:</strong></p>
@@ -350,7 +350,7 @@ export const resolvers = {
           <p>Best,<br>The <strong>Combat Tix</strong> Team</p>
         `,
       };
-      await sgMail.send(msg);
+      await postmarkClient.sendEmail(msg);
 
       return updatedUser;
     },
@@ -372,12 +372,12 @@ export const resolvers = {
       const magicLink = `${process.env.FRONTEND_URL}/reset-password?email=${email}&token=${resetToken}`;
       const msg = {
         to: email,
-        from: process.env.SENDGRID_SENDER_EMAIL,
+        from: process.env.POSTMARK_SENDER_EMAIL,
         subject: "Password Reset Request - Combat Tix",
-        html: emailTemplates.passwordReset(user, magicLink),
+        HtmlBody: emailTemplates.passwordReset(user, magicLink),
       };
       try {
-        await sgMail.send(msg);
+        await postmarkClient.sendEmail(msg);
       } catch (error) {
         console.error("SendGrid Error:", error);
         throw new GraphQLError("Failed to send password reset email.", {
@@ -425,11 +425,11 @@ export const resolvers = {
         // Send the password reset confirmation email
         const msg = {
           to: user.email,
-          from: process.env.SENDGRID_SENDER_EMAIL,
+          from: process.env.POSTMARK_SENDER_EMAIL,
           subject: "Password Reset Successful - Combat Tix",
-          html: emailTemplates.passwordResetSuccess(user),
+          HtmlBody: emailTemplates.passwordResetSuccess(user),
         };
-        await sgMail.send(msg);
+        await postmarkClient.sendEmail(msg);
 
         return { message: "Password reset successfully." };
       } catch (error) {

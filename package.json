@@ -34,6 +34,7 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.0",
+    "postmark": "^4.0.5",
     "speakeasy": "^2.0.0",
     "uuid": "^11.1.0",
     "winston": "^3.17.0"
