@@ -8,8 +8,10 @@ import { emailTemplates } from "../../template/emailTemplates.js";
 import rateLimit from "express-rate-limit";
 
 dotenv.config();
-const postmarkClient =
-  new postmark.ServerClient(process.env.POSTMARK_API_KEY) || "vhjghkdsgkgkfdff";
+
+export const getPostMarkClient = () => {
+  return new postmark.ServerClient(process.env.POSTMARK_API_KEY);
+};
 
 // Generate tokens
 const generateTokens = (user) => {
@@ -80,6 +82,8 @@ export const resolvers = {
           subject: "Welcome to Combat Tix – Confirm Your Email",
           HtmlBody: emailTemplates.verificationEmail(user, verificationCode),
         };
+
+        const postmarkClient = getPostMarkClient();
         await postmarkClient.sendEmail(msg);
 
         return {
@@ -152,6 +156,8 @@ export const resolvers = {
           subject: "Your Combat Tix Email is Verified!",
           HtmlBody: emailTemplates.emailVerified(user),
         };
+        const postmarkClient = getPostMarkClient();
+
         await postmarkClient.sendEmail(msg);
 
         return { message: "Email verified successfully." };
@@ -199,6 +205,7 @@ export const resolvers = {
           subject: "New Verification Code – Combat Tix",
           HtmlBody: emailTemplates.verificationEmail(user, newVerificationCode),
         };
+        const postmarkClient = getPostMarkClient();
         await postmarkClient.sendEmail(msg);
 
         return {
@@ -351,6 +358,7 @@ export const resolvers = {
           <p>Best,<br>The <strong>Combat Tix</strong> Team</p>
         `,
       };
+      const postmarkClient = getPostMarkClient();
       await postmarkClient.sendEmail(msg);
 
       return updatedUser;
@@ -430,6 +438,8 @@ export const resolvers = {
           subject: "Password Reset Successful - Combat Tix",
           HtmlBody: emailTemplates.passwordResetSuccess(user),
         };
+        const postmarkClient = getPostMarkClient();
+
         await postmarkClient.sendEmail(msg);
 
         return { message: "Password reset successfully." };
