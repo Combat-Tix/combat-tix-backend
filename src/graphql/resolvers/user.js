@@ -8,7 +8,8 @@ import { emailTemplates } from "../../template/emailTemplates.js";
 import rateLimit from "express-rate-limit";
 
 dotenv.config();
-const postmarkClient = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
+const postmarkClient =
+  new postmark.ServerClient(process.env.POSTMARK_API_KEY) || "vhjghkdsgkgkfdff";
 
 // Generate tokens
 const generateTokens = (user) => {
