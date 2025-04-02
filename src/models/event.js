@@ -29,6 +29,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide Event venue."],
     },
+    description: {
+      type: String,
+      required: [true, "Please provide Event description."],
+    },
     capacity: {
       type: Number,
       required: [true, "Please provide Event capacity."],
