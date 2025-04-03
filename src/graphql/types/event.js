@@ -5,7 +5,8 @@ export const typeDefs = `#graphql
     promoterId: ID!
     name: String!
     venue: String!
-    description: String!
+    description: String
+    subDescription: String
     capacity: Int!
     location: Location
     eventDateTime: EventDateTime
@@ -74,6 +75,7 @@ export const typeDefs = `#graphql
     name: String!
     venue: String!
      description: String!
+     subDescription: String!
     capacity: Int!
     location: LocationInput
     eventDateTime: EventDateTimeInput
@@ -93,6 +95,7 @@ export const typeDefs = `#graphql
     name: String
     venue: String
      description: String
+     subDescription: String
     capacity: Int
     location: LocationInput
     eventDateTime: EventDateTimeInput

@@ -204,6 +204,8 @@ export const resolvers = {
         "eventType",
         "bannerURL",
         "splitPercentage",
+        "description",
+        "subDescription",
       ];
 
       const missingFields = requiredFields.filter((field) => !input[field]);
