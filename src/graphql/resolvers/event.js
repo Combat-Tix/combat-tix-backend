@@ -209,7 +209,7 @@ export const resolvers = {
       ];
 
       const missingFields = requiredFields.filter((field) => !input[field]);
-
+      
       if (missingFields.length > 0) {
         throw new GraphQLError("Missing required fields", {
           extensions: {
